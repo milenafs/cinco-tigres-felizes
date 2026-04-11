@@ -26,7 +26,33 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+## Project Structure
+
+This project follows a **layer-based architecture** to keep code organized and maintainable:
+
+```
+lib/
+├── main.dart                 # App entry point - initializes the app
+├── screens/                  # Full pages/screens shown to users
+│   └── home_screen.dart      # Example: Home page screen
+├── widgets/                  # Reusable UI components
+│   └── (custom buttons, cards, forms, etc.)
+├── models/                   # Data structures
+│   └── vacina_model.dart    # Example: Vacina data model
+└── services/                 # Business logic & data handling
+    └── vacina_service.dart  # Example: vacina operations
+```
+
+### Each Folder:
+
+- **`main.dart`** - Entry point of your app. Sets up the app theme and navigation.
+- **`screens/`** - Full pages that users see. Each screen is a StatefulWidget or StatelessWidget. Example: login screen, home screen, settings screen.
+- **`widgets/`** - Reusable UI components used across multiple screens. Example: custom buttons, product cards, input forms.
+- **`models/`** - Data classes that represent your app's entities. Example: User, Product, Counter.
+- **`services/`** - Contains business logic and data handling. Services manage state and calculations. Example: authentication logic, API calls, counter operations.
+
 ### Run project
-´´´
+
+```
 flutter run -d chrome
-´´´
+```
