@@ -12,6 +12,6 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verifica se o texto de "Empty State" aparece
-    expect(find.text('Nenhum horário cadastrado'), findsOneWidget);
+    expect(find.text('Nenhum lembrete cadastrado'), findsOneWidget);
   });
 }

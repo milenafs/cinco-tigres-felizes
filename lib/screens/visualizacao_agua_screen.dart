@@ -21,7 +21,7 @@ class _VisualizacaoAguaScreenState extends State<VisualizacaoAguaScreen> {
   Future<void> _carregarHorario() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _horarioSalvo = prefs.getString('horario_agua') ?? "Nenhum horário cadastrado";
+      _horarioSalvo = prefs.getString('horario_agua') ?? "Nenhum lembrete cadastrado";
     });
   }
 
