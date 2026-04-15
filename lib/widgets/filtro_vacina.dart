@@ -30,7 +30,7 @@ class _FiltroModalState extends State<FiltroModal> {
           const SizedBox(height: 20),
           
           DropdownButtonFormField<String>(
-            value: _categoriaSelecionada,
+            initialValue: _categoriaSelecionada,
             decoration: const InputDecoration(labelText: 'Selecione sua faixa etária'),
             items: const [
               DropdownMenuItem(value: 'crianca_0_10', child: Text('Criança (0 a 10 anos)')),
