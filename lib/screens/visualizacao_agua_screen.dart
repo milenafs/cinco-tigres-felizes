@@ -74,7 +74,7 @@ class _VisualizacaoAguaScreenState extends State<VisualizacaoAguaScreen> {
             ),
             const SizedBox(height: 30),
             const Text(
-              'Próxima hidratação programada:',
+              'Lembrete de hidratação programado:',
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
             const SizedBox(height: 12),
