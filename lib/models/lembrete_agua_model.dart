@@ -3,12 +3,16 @@ class LembreteAguaModel {
   final int frequenciaEmMinutos;
   final int horaInicio; // 0–23
   final int horaFim;    // 0–23
+  final int minutoInicio; // 0–59
+  final int minutoFim;    // 0–59
 
   LembreteAguaModel({
     required this.id,
     required this.frequenciaEmMinutos,
     required this.horaInicio,
-    required this.horaFim,
+    required this.horaFim, 
+    required this.minutoInicio, 
+    required this.minutoFim,
   });
 
   List<DateTime> gerarHorariosParaHoje() {
@@ -19,6 +23,7 @@ class LembreteAguaModel {
       agora.month,
       agora.day,
       horaInicio,
+      minutoInicio,
     );
 
     final fim = DateTime(
@@ -26,6 +31,7 @@ class LembreteAguaModel {
       agora.month,
       agora.day,
       horaFim,
+      minutoFim,
     );
 
     List<DateTime> horarios = [];

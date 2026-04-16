@@ -15,14 +15,14 @@ class _LembreteAguaScreenState extends State<LembreteAguaScreen> {
   Future<void> _salvarNoBanco(dynamic resultado) async {
     final prefs = await SharedPreferences.getInstance();
 
-    // Criamos um mapa estruturado com os dados brutos
     Map<String, dynamic> dadosParaSalvar = {
       'horaInicio': resultado.horaInicio,
+      'minutoInicio': resultado.minutoInicio, // Adicionado
       'horaFim': resultado.horaFim,
+      'minutoFim': resultado.minutoFim,       // Adicionado
       'frequencia': resultado.frequenciaEmMinutos,
     };
 
-    // Convertemos o mapa em uma String JSON
     String jsonS = jsonEncode(dadosParaSalvar);
     await prefs.setString('horario_agua', jsonS);
 
