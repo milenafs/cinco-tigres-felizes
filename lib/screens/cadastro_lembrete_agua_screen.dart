@@ -11,7 +11,10 @@ class CadastroLembreteScreen extends StatefulWidget {
 
 class _CadastroLembreteScreenState extends State<CadastroLembreteScreen> {
   int horaInicio = 8;
+  int minutoInicio = 0;
+
   int horaFim = 22;
+  int minutoFim = 0;
 
   int horasFreq = 1;
   int minutosFreq = 0;
@@ -26,12 +29,13 @@ class _CadastroLembreteScreenState extends State<CadastroLembreteScreen> {
   Future<void> _selecionarHoraInicio() async {
     final picked = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay(hour: horaInicio, minute: 0),
+      initialTime: TimeOfDay(hour: horaInicio, minute: minutoInicio), // Usa minuto atual
     );
 
     if (picked != null) {
       setState(() {
         horaInicio = picked.hour;
+        minutoInicio = picked.minute; // Captura o minuto selecionado
       });
     }
   }
@@ -39,70 +43,58 @@ class _CadastroLembreteScreenState extends State<CadastroLembreteScreen> {
   Future<void> _selecionarHoraFim() async {
     final picked = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay(hour: horaFim, minute: 0),
+      initialTime: TimeOfDay(hour: horaFim, minute: minutoFim), // Usa minuto atual
     );
 
     if (picked != null) {
       setState(() {
         horaFim = picked.hour;
+        minutoFim = picked.minute; // Captura o minuto selecionado
       });
     }
   }
 
   void _validarFrequencia() {
-    final h = int.tryParse(horasController.text) ?? -1;
-    final m = int.tryParse(minutosController.text) ?? -1;
-
-    if (h < 0 || m < 0 || (h == 0 && m == 0)) {
-      setState(() {
-        erroFrequencia = 'Frequência inválida';
-      });
-      return;
-    }
-
-    final totalMin = h * 60 + m;
-
-    final intervaloTotal = (horaFim - horaInicio) * 60;
-
-    if (totalMin > intervaloTotal) {
-      setState(() {
-        erroFrequencia =
-            'Frequência maior que o intervalo (${intervaloTotal} min)';
-      });
-      return;
-    }
-
     setState(() {
-      erroFrequencia = null;
-      horasFreq = h;
-      minutosFreq = m;
+      // 1. Converter inputs de frequência para minutos totais
+      horasFreq = int.tryParse(horasController.text) ?? 0;
+      minutosFreq = int.tryParse(minutosController.text) ?? 0;
+      int frequenciaTotal = (horasFreq * 60) + minutosFreq;
+
+      // 2. Calcular o intervalo disponível em minutos
+      int inicioEmMinutos = (horaInicio * 60) + minutoInicio;
+      int fimEmMinutos = (horaFim * 60) + minutoFim;
+      int intervaloDisponivel = fimEmMinutos - inicioEmMinutos;
+
+      // 3. Validação
+      if (frequenciaTotal <= 0) {
+        erroFrequencia = 'A frequência deve ser maior que zero';
+      } else if (frequenciaTotal > intervaloDisponivel) {
+        erroFrequencia = 'A frequência não pode ser maior que o intervalo definido';
+      } else {
+        erroFrequencia = null; // Tudo certo!
+      }
     });
   }
 
   void _salvar() {
-    if (horaFim <= horaInicio) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Intervalo inválido')),
-      );
-      return;
-    }
-
     _validarFrequencia();
 
-    if (erroFrequencia != null) return;
+    if (erroFrequencia == null) {
+      int frequenciaTotal = (horasFreq * 60) + minutosFreq;
 
-    final frequenciaTotal = horasFreq * 60 + minutosFreq;
+      // Criamos o modelo incluindo os novos campos de minutos
+      final lembrete = LembreteAguaModel(
+        id: DateTime.now().millisecondsSinceEpoch,
+        frequenciaEmMinutos: frequenciaTotal,
+        horaInicio: horaInicio,
+        minutoInicio: minutoInicio, // Agora o dado real é enviado
+        horaFim: horaFim,
+        minutoFim: minutoFim,    // Agora o dado real é enviado
+      );
 
-    final lembrete = LembreteAguaModel(
-      id: DateTime.now().millisecondsSinceEpoch,
-      frequenciaEmMinutos: frequenciaTotal,
-      horaInicio: horaInicio,
-      horaFim: horaFim,
-    );
-
-    debugPrint('Lembrete criado: $lembrete');
-
-    Navigator.pop(context, lembrete);
+      Navigator.pop(context, lembrete);
+    }
   }
 
   @override
@@ -131,7 +123,7 @@ class _CadastroLembreteScreenState extends State<CadastroLembreteScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _selecionarHoraInicio,
-                    child: Text('${horaInicio.toString().padLeft(2, '0')}:00'),
+                    child: Text('${horaInicio.toString().padLeft(2, '0')}:${minutoInicio.toString().padLeft(2, '0')}'),
                   ),
                 ),
 
@@ -147,7 +139,7 @@ class _CadastroLembreteScreenState extends State<CadastroLembreteScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _selecionarHoraFim,
-                    child: Text('${horaFim.toString().padLeft(2, '0')}:00'),
+                    child: Text('${horaFim.toString().padLeft(2, '0')}:${minutoFim.toString().padLeft(2, '0')}'),
                   ),
                 ),
 
