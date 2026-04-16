@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'cadastro_lembrete_agua_screen.dart';
@@ -13,9 +14,18 @@ class LembreteAguaScreen extends StatefulWidget {
 class _LembreteAguaScreenState extends State<LembreteAguaScreen> {
   Future<void> _salvarNoBanco(dynamic resultado) async {
     final prefs = await SharedPreferences.getInstance();
-    
-    await prefs.setString('horario_agua', resultado.toString());
-    
+
+    // Criamos um mapa estruturado com os dados brutos
+    Map<String, dynamic> dadosParaSalvar = {
+      'horaInicio': resultado.horaInicio,
+      'horaFim': resultado.horaFim,
+      'frequencia': resultado.frequenciaEmMinutos,
+    };
+
+    // Convertemos o mapa em uma String JSON
+    String jsonS = jsonEncode(dadosParaSalvar);
+    await prefs.setString('horario_agua', jsonS);
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -38,7 +48,7 @@ class _LembreteAguaScreenState extends State<LembreteAguaScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // BOTÃO DE CADASTRO DO LEMBRETE
+                // Botão para cadastrar um novo lembrete
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
@@ -60,7 +70,7 @@ class _LembreteAguaScreenState extends State<LembreteAguaScreen> {
 
                 const SizedBox(height: 20),
 
-                // O SEU BOTÃO DE VISUALIZAÇÃO
+                // Botão para visualizar o lembrete salvo
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(

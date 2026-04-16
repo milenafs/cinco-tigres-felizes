@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class VisualizacaoAguaScreen extends StatefulWidget {
   const VisualizacaoAguaScreen({super.key});
@@ -9,7 +10,7 @@ class VisualizacaoAguaScreen extends StatefulWidget {
 }
 
 class _VisualizacaoAguaScreenState extends State<VisualizacaoAguaScreen> {
-  String _horarioSalvo = "Carregando...";
+  String _horarioExibicao = "Carregando...";
 
   @override
   void initState() {
@@ -18,12 +19,32 @@ class _VisualizacaoAguaScreenState extends State<VisualizacaoAguaScreen> {
   }
 
   // Função isolada para buscar o dado no armazenamento local
-  Future<void> _carregarHorario() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _horarioSalvo = prefs.getString('horario_agua') ?? "Nenhum lembrete cadastrado";
-    });
+Future<void> _carregarHorario() async {
+  final prefs = await SharedPreferences.getInstance();
+  final String? jsonS = prefs.getString('horario_agua');
+
+  if (jsonS == null) {
+    setState(() => _horarioExibicao = "Nenhum lembrete cadastrado");
+    return;
   }
+
+  try {
+    // Transformamos a String de volta em um mapa de dados
+    final Map<String, dynamic> dados = jsonDecode(jsonS);
+
+    // Extraímos os valores
+    final inicio = dados['horaInicio'];
+    final fim = dados['horaFim'];
+    final freq = dados['frequencia'];
+
+    setState(() {
+      // Aplicando exatamente o seu padrão de formatação
+      _horarioExibicao = "Das ${inicio}h às ${fim}h, a cada ${freq} min";
+    });
+  } catch (e) {
+    setState(() => _horarioExibicao = "Erro ao carregar formato");
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +73,7 @@ class _VisualizacaoAguaScreenState extends State<VisualizacaoAguaScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              _horarioSalvo,
+              _horarioExibicao,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 24,
