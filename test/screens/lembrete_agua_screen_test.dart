@@ -65,7 +65,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verificar se mensagem de erro é exibida
-    expect(find.text('Frequência inválida'), findsWidgets);
+    expect(find.text('A frequência deve ser maior que zero'), findsOneWidget);  
   });
 
   testWidgets('displays error when frequency exceeds interval', (
@@ -96,6 +96,6 @@ void main() {
     await tester.tap(find.text('Salvar'));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('Frequência maior que o intervalo'), findsWidgets);
+    expect(find.text('A frequência não pode ser maior que o intervalo definido'), findsOneWidget);
   });
 }
