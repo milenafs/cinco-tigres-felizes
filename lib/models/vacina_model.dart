@@ -37,6 +37,16 @@ class VacinasCalendarioModel {
     required this.idosos,
   });
 
+  List<VacinaModel> selecionarLista(String categoria) {
+    switch (categoria) {
+      case 'adolescente_11_19': return adolescentes;
+      case 'adulto_20_59': return adultos;
+      case 'gestante': return gestantes;
+      case 'idoso_60_mais': return idosos;
+      default: return criancas;
+    }
+  }
+
   factory VacinasCalendarioModel.fromJson(Map<String, dynamic> json) {
     List<VacinaModel> parseLista(String chave) {
       final lista = (json[chave] as List<dynamic>? ?? <dynamic>[]);
@@ -49,9 +59,7 @@ class VacinasCalendarioModel {
       criancas: parseLista('crianca_0_10'),
       adolescentes: parseLista('adolescente_11_19'),
       adultos: parseLista('adulto_20_59'),
-      gestantes: (json['gestante'] != null)
-          ? parseLista('gestante')
-          : parseLista('gestantes'),
+      gestantes: parseLista('gestante'),
       idosos: parseLista('idoso_60_mais'),
     );
   }
