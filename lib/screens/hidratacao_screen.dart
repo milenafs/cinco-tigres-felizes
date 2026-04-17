@@ -55,7 +55,54 @@ class _HidratacaoScreenState extends State<HidratacaoScreen> {
           Text('Faltam ${model.restante} ml para atingir a meta'),
 
           const Spacer(),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _botaoAgua(
+                titulo: 'Copo',
+                quantidade: 250,
+                icone: Icons.local_drink,
+              ),
+              _botaoAgua(
+                titulo: 'Garrafa',
+                quantidade: 500,
+                icone: Icons.opacity,
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 20),
+
+          // Botão para resetar o contador
+          TextButton.icon(
+            onPressed: () {
+              setState(() {
+                _consumoAtual = 0;
+              });
+            },
+            icon: const Icon(Icons.refresh, color: Colors.red),
+            label: const Text('Zerar Dia', style: TextStyle(color: Colors.red)),
+          ),
+
+          const SizedBox(height: 40),
         ],
+      ),
+    );
+  }
+
+  Widget _botaoAgua({
+    required String titulo,
+    required int quantidade,
+    required IconData icone,
+  }) {
+    return ElevatedButton.icon(
+      onPressed: () => _adicionarAgua(quantidade),
+      icon: Icon(icone),
+      label: Text('$titulo\n${quantidade}ml', textAlign: TextAlign.center),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
