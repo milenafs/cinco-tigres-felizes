@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cinco_tigres_felizes/screens/vacinacao_screen.dart';
-import 'package:cinco_tigres_felizes/screens/lembrete_agua_screen.dart';
 import 'package:cinco_tigres_felizes/screens/hidratacao_screen.dart';
+import 'package:cinco_tigres_felizes/screens/lembrete_agua_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -41,7 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     label: const Text('Abrir Vacinação'),
                   ),
                 ),
+
                 const SizedBox(height: 20),
+
                 // Botão Lembrete de Água
                 SizedBox(
                   width: double.infinity,
@@ -53,12 +55,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     },
-                    icon: const Icon(Icons.water_drop),
+                    icon: const Icon(Icons.notifications_active),
                     label: const Text('Lembrete de Água'),
                   ),
                 ),
+
                 const SizedBox(height: 20),
-                // Botão hidratação
+
+                // Botão: Painel de Hidratação
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
