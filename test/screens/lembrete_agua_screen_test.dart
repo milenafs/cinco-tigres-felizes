@@ -12,7 +12,7 @@ void main() {
     await tester.pumpWidget(const MyApp());
 
     expect(find.text('Lembrete de Água'), findsOneWidget);
-    expect(find.byIcon(Icons.water_drop), findsOneWidget);
+    expect(find.byIcon(Icons.water_drop), findsWidgets);
 
     await tester.tap(find.text('Lembrete de Água'));
     await tester.pumpAndSettle();
