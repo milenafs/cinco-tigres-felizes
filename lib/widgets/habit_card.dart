@@ -5,18 +5,21 @@ import '../models/habit_model.dart';
 class CartaoHabito extends StatelessWidget {
   final HabitoModel habito;
   final ValueChanged<DateTime> aoAlternarData;
+  final VoidCallback? aoEditar;
+  final VoidCallback? aoRemover;
 
   const CartaoHabito({
     super.key,
     required this.habito,
     required this.aoAlternarData,
+    this.aoEditar,
+    this.aoRemover,
   });
 
   @override
   Widget build(BuildContext context) {
     final periodos = habito.obterPeriodosHistorico();
     final hoje = DateTime.now();
-    final concluidoHoje = habito.estaConcluidoEm(hoje);
     final contagemHoje = habito.obterContagem(hoje);
 
     return Card(
@@ -30,12 +33,30 @@ class CartaoHabito extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    habito.nome,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          habito.nome,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: aoEditar,
+                        icon: const Icon(Icons.edit, size: 20),
+                        tooltip: 'Editar hábito',
+                      ),
+                      IconButton(
+                        onPressed: aoRemover,
+                        icon: const Icon(Icons.delete_forever, size: 20),
+                        tooltip: 'Remover hábito',
+                        color: Colors.red.shade700,
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 6),
                   Text(
@@ -50,7 +71,7 @@ class CartaoHabito extends StatelessWidget {
                 ],
               ),
             ),
-            _buildTodaySection(concluidoHoje, contagemHoje),
+            _buildTodaySection(contagemHoje),
           ],
         ),
       ),
@@ -58,24 +79,9 @@ class CartaoHabito extends StatelessWidget {
   }
 
   Widget _buildHistoricoSection(List<PeriodoHistorico> periodos) {
-    String titulo = '';
-    switch (habito.tipo) {
-      case TipoFrequenciaHabito.diario:
-        titulo = 'Últimos 7 dias';
-        break;
-      case TipoFrequenciaHabito.vezesPorDia:
-        titulo = 'Últimos 7 dias (${habito.vezesPorDia}x)';
-        break;
-      case TipoFrequenciaHabito.diasDaSemana:
-        titulo = 'Esta semana';
-        break;
-      case TipoFrequenciaHabito.semanal:
-        titulo = 'Últimas 7 semanas';
-        break;
-      case TipoFrequenciaHabito.mensal:
-        titulo = 'Últimos 12 meses';
-        break;
-    }
+    final titulo = habito.tipo == TipoFrequenciaHabito.vezesPorDia
+        ? 'Últimos 7 dias (${habito.vezesPorDia}x)'
+        : 'Últimos 7 dias';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,9 +91,7 @@ class CartaoHabito extends StatelessWidget {
         Wrap(
           spacing: 6,
           runSpacing: 6,
-          children: periodos
-              .map((periodo) => _buildPeriodoWidget(periodo))
-              .toList(),
+          children: periodos.map((periodo) => _buildPeriodoWidget(periodo)).toList(),
         ),
       ],
     );
@@ -95,10 +99,9 @@ class CartaoHabito extends StatelessWidget {
 
   Widget _buildPeriodoWidget(PeriodoHistorico periodo) {
     final percentual = periodo.percentual;
-    final podeMarcar = periodo.podeMarcar && (habito.tipo != TipoFrequenciaHabito.mensal);
 
     return GestureDetector(
-      onTap: podeMarcar ? () => aoAlternarData(periodo.data) : null,
+      onTap: () => aoAlternarData(periodo.data),
       child: Semantics(
         label: '${periodo.label} - ${(percentual * 100).toStringAsFixed(0)}%',
         child: Container(
@@ -142,13 +145,14 @@ class CartaoHabito extends StatelessWidget {
     return Colors.green.shade700;
   }
 
-  Widget _buildTodaySection(bool concluidoHoje, int contagemHoje) {
+  Widget _buildTodaySection(int contagemHoje) {
     final total = habito.tipo == TipoFrequenciaHabito.vezesPorDia ? habito.vezesPorDia : 1;
     final percentual = total == 0 ? 0.0 : (contagemHoje / total).clamp(0, 1);
 
     return Column(
       children: [
-        GestureDetector(          key: Key('botao-marcar-hoje-${habito.id}'),          onTap: () => aoAlternarData(DateTime.now()),
+        GestureDetector(
+          onTap: () => aoAlternarData(DateTime.now()),
           child: Container(
             width: 40,
             height: 40,
@@ -180,23 +184,21 @@ class CartaoHabito extends StatelessWidget {
 
   Widget _buildHojeContent(int contagem, int total) {
     if (total == 1) {
-      // Diário: mostrar ícone
       return Icon(
         contagem > 0 ? Icons.check : Icons.add,
         color: contagem > 0 ? Colors.white : Colors.grey.shade700,
         size: 20,
       );
-    } else {
-      // X vezes por dia: mostrar contador
-      return Text(
-        '$contagem/$total',
-        style: TextStyle(
-          color: contagem > 0 ? Colors.white : Colors.black87,
-          fontWeight: FontWeight.bold,
-          fontSize: 11,
-        ),
-        textAlign: TextAlign.center,
-      );
     }
+
+    return Text(
+      '$contagem/$total',
+      style: TextStyle(
+        color: contagem > 0 ? Colors.white : Colors.black87,
+        fontWeight: FontWeight.bold,
+        fontSize: 11,
+      ),
+      textAlign: TextAlign.center,
+    );
   }
 }

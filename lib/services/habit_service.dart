@@ -36,17 +36,6 @@ class HabitoService {
     await salvarHabitos(habitos);
   }
 
-  Future<void> atualizarHabito(HabitoModel habito) async {
-    final habitos = await carregarHabitos();
-    final index = habitos.indexWhere((item) => item.id == habito.id);
-    if (index == -1) {
-      habitos.insert(0, habito);
-    } else {
-      habitos[index] = habito;
-    }
-    await salvarHabitos(habitos);
-  }
-
   Future<void> alternarConclusao(String habitoId, DateTime data) async {
     final habitos = await carregarHabitos();
     final index = habitos.indexWhere((item) => item.id == habitoId);
@@ -55,6 +44,22 @@ class HabitoService {
     }
     final atualizado = habitos[index].alternarConclusao(data);
     habitos[index] = atualizado;
+    await salvarHabitos(habitos);
+  }
+
+  Future<void> atualizarHabito(HabitoModel habitoAtualizado) async {
+    final habitos = await carregarHabitos();
+    final index = habitos.indexWhere((item) => item.id == habitoAtualizado.id);
+    if (index == -1) {
+      return;
+    }
+    habitos[index] = habitoAtualizado;
+    await salvarHabitos(habitos);
+  }
+
+  Future<void> removerHabito(String habitoId) async {
+    final habitos = await carregarHabitos();
+    habitos.removeWhere((item) => item.id == habitoId);
     await salvarHabitos(habitos);
   }
 }

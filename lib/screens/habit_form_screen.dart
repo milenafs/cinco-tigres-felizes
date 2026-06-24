@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../models/habit_model.dart';
 
 class FormularioHabitoScreen extends StatefulWidget {
-  const FormularioHabitoScreen({super.key});
+  final HabitoModel? habito;
+
+  const FormularioHabitoScreen({super.key, this.habito});
 
   @override
   State<FormularioHabitoScreen> createState() => _FormularioHabitoState();
@@ -13,16 +15,21 @@ class _FormularioHabitoState extends State<FormularioHabitoScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nomeController = TextEditingController();
   final _vezesController = TextEditingController(text: '1');
-  final _diaDoMesController = TextEditingController();
 
-  TipoFrequenciaHabito _tipo = TipoFrequenciaHabito.diario;
-  final List<bool> _diasDaSemanaSelecionados = List<bool>.filled(7, false);
+  late TipoFrequenciaHabito _tipo;
+
+  @override
+  void initState() {
+    super.initState();
+    _tipo = widget.habito?.tipo ?? TipoFrequenciaHabito.diario;
+    _nomeController.text = widget.habito?.nome ?? '';
+    _vezesController.text = widget.habito?.vezesPorDia.toString() ?? '1';
+  }
 
   @override
   void dispose() {
     _nomeController.dispose();
     _vezesController.dispose();
-    _diaDoMesController.dispose();
     super.dispose();
   }
 
@@ -31,33 +38,15 @@ class _FormularioHabitoState extends State<FormularioHabitoScreen> {
       return;
     }
 
-    if (_tipo == TipoFrequenciaHabito.diasDaSemana &&
-        !_diasDaSemanaSelecionados.contains(true)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Selecione pelo menos um dia da semana.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
     final nome = _nomeController.text.trim();
     final vezesPorDia = int.tryParse(_vezesController.text) ?? 1;
-    final diaDoMes = int.tryParse(_diaDoMesController.text);
 
     final habito = HabitoModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: widget.habito?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
       nome: nome,
       tipo: _tipo,
       vezesPorDia: vezesPorDia,
-      diasDaSemana: _diasDaSemanaSelecionados
-          .asMap()
-          .entries
-          .where((entry) => entry.value)
-          .map((entry) => entry.key + 1)
-          .toList(),
-      diaDoMes: _tipo == TipoFrequenciaHabito.mensal ? diaDoMes : null,
+      historico: widget.habito?.historico ?? {},
     );
 
     Navigator.of(context).pop(habito);
@@ -66,7 +55,9 @@ class _FormularioHabitoState extends State<FormularioHabitoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Novo hábito')),
+      appBar: AppBar(
+        title: Text(widget.habito == null ? 'Novo hábito' : 'Editar hábito'),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
@@ -94,12 +85,16 @@ class _FormularioHabitoState extends State<FormularioHabitoScreen> {
                   labelText: 'Tipo de frequência',
                   border: OutlineInputBorder(),
                 ),
-                items: TipoFrequenciaHabito.values.map((option) {
-                  return DropdownMenuItem(
-                    value: option,
-                    child: Text(rotuloFrequencia(option)),
-                  );
-                }).toList(),
+                items: const [
+                  DropdownMenuItem(
+                    value: TipoFrequenciaHabito.diario,
+                    child: Text('Diário'),
+                  ),
+                  DropdownMenuItem(
+                    value: TipoFrequenciaHabito.vezesPorDia,
+                    child: Text('X vezes por dia'),
+                  ),
+                ],
                 onChanged: (value) {
                   if (value != null) {
                     setState(() {
@@ -121,49 +116,6 @@ class _FormularioHabitoState extends State<FormularioHabitoScreen> {
                     final numero = int.tryParse(value ?? '');
                     if (numero == null || numero <= 0) {
                       return 'Informe uma quantidade válida.';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-              ],
-              if (_tipo == TipoFrequenciaHabito.diasDaSemana) ...[
-                const Text('Selecione os dias da semana'),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: List<Widget>.generate(7, (index) {
-                    final label = rotuloDiaSemana(index + 1);
-                    return ChoiceChip(
-                      label: Text(label),
-                      selected: _diasDaSemanaSelecionados[index],
-                      onSelected: (selected) {
-                        setState(() {
-                          _diasDaSemanaSelecionados[index] = selected;
-                        });
-                      },
-                    );
-                  }),
-                ),
-                const SizedBox(height: 16),
-              ],
-              if (_tipo == TipoFrequenciaHabito.mensal) ...[
-                TextFormField(
-                  controller: _diaDoMesController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Dia do mês',
-                    hintText: 'Ex: 15',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Informe um dia do mês.';
-                    }
-                    final numero = int.tryParse(value);
-                    if (numero == null || numero < 1 || numero > 31) {
-                      return 'Informe um dia do mês válido.';
                     }
                     return null;
                   },

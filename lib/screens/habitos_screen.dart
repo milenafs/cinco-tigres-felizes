@@ -54,6 +54,45 @@ class _HabitosScreenState extends State<HabitosScreen> {
     await _carregarHabitos();
   }
 
+  Future<void> _editarHabito(HabitoModel habito) async {
+    final habitoAtualizado = await Navigator.of(context).push<HabitoModel>(
+      MaterialPageRoute(
+        builder: (_) => FormularioHabitoScreen(habito: habito),
+      ),
+    );
+    if (habitoAtualizado != null) {
+      await _servico.atualizarHabito(habitoAtualizado);
+      await _carregarHabitos();
+    }
+  }
+
+  Future<void> _removerHabito(HabitoModel habito) async {
+    final confirmado = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Remover hábito'),
+          content: const Text('Tem certeza que deseja remover este hábito?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Remover'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmado == true) {
+      await _servico.removerHabito(habito.id);
+      await _carregarHabitos();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,6 +127,8 @@ class _HabitosScreenState extends State<HabitosScreen> {
                         return CartaoHabito(
                           habito: habito,
                           aoAlternarData: (data) => _alternarConclusao(habito, data),
+                          aoEditar: () => _editarHabito(habito),
+                          aoRemover: () => _removerHabito(habito),
                         );
                       },
                     ),
