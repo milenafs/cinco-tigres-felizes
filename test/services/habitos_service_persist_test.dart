@@ -1,9 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:cinco_tigres_felizes/models/habitos_model.dart';
-import 'package:cinco_tigres_felizes/services/habitos_service.dart';
-
+import 'package:cinco_tigres_felizes/features/habits/models/habits_model.dart';
+import 'package:cinco_tigres_felizes/features/habits/services/habits_service.dart';
 void main() {
   test('HabitoService persiste historico entre leituras', () async {
     SharedPreferences.setMockInitialValues({});

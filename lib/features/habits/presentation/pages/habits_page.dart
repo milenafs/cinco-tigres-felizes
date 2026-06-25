@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/habits_model.dart';
-import '../../services/habitos_service.dart';
+import '../../services/habits_service.dart';
 import '../widgets/habitos_card.dart';
 import 'habits_form_page.dart';
 
