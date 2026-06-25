@@ -7,14 +7,16 @@ void main() {
       final json = {
         'nome': 'BCG',
         'descricao': 'Previne tuberculose',
-        'dose': 'Dose unica',
+        'dose_texto': 'Dose unica',
+        'quantidade_doses': 1, 
       };
 
       final model = VacinaModel.fromJson(json);
 
       expect(model.nome, 'BCG');
       expect(model.descricao, 'Previne tuberculose');
-      expect(model.dose, 'Dose unica');
+      expect(model.doseTexto, 'Dose unica'); 
+      expect(model.quantidadeDeDoses, 1);   
       expect(model.toJson(), json);
     });
   });
@@ -26,7 +28,8 @@ void main() {
           {
             'nome': 'BCG',
             'descricao': 'Previne tuberculose',
-            'dose': 'Dose unica',
+            'dose_texto': 'Dose unica',
+            'quantidade_doses': 1,
           },
         ],
         'adolescente_11_19': <Map<String, dynamic>>[],
@@ -35,7 +38,8 @@ void main() {
           {
             'nome': 'dTPa',
             'descricao': 'Previne difteria, tetano e coqueluche',
-            'dose': '1 dose por gestacao',
+            'dose_texto': '1 dose por gestacao',
+            'quantidade_doses': 1,
           },
         ],
         'idoso_60_mais': <Map<String, dynamic>>[],
@@ -52,9 +56,9 @@ void main() {
 
   group('VacinasCalendarioModel - Filtros', () {
     test('Selecting "gestante" group', () {
-      final vacinaG1 = VacinaModel(nome: 'Hepatite B', descricao: 'Previne hepatite B', dose: '3 doses');
-      final vacinaG2 = VacinaModel(nome: 'dTPa', descricao: 'Previne difteria, tétano e coqueluche', dose: '1 dose por gestação');
-      final vacinaC1 = VacinaModel(nome: 'BCG', descricao: 'Previne formas graves de tuberculose', dose: 'Dose única');
+      final vacinaG1 = VacinaModel(nome: 'Hepatite B', descricao: 'Previne hepatite B', doseTexto: '3 doses', quantidadeDeDoses: 3);
+      final vacinaG2 = VacinaModel(nome: 'dTPa', descricao: 'Previne difteria, tétano e coqueluche', doseTexto: '1 dose por gestação', quantidadeDeDoses: 1);
+      final vacinaC1 = VacinaModel(nome: 'BCG', descricao: 'Previne formas graves de tuberculose', doseTexto: 'Dose única', quantidadeDeDoses: 1);
 
       final calendario = VacinasCalendarioModel(
         criancas: [vacinaC1],
@@ -74,9 +78,9 @@ void main() {
     });
 
     test('Selecting "crianca" group', () {
-      final vacinaC1 = VacinaModel(nome: 'Hepatite B', descricao: 'Previne hepatite B', dose: '3 doses');
-      final vacinaC2 = VacinaModel(nome: 'BCG', descricao: 'Previne formas graves de tuberculose', dose: 'Dose única');
-      final vacinaC3 = VacinaModel(nome: 'VIP (Poliomielite inativada)', descricao: 'Previne poliomielite', dose: '1ª, 2ª e 3ª doses');
+      final vacinaC1 = VacinaModel(nome: 'Hepatite B', descricao: 'Previne hepatite B', doseTexto: '3 doses', quantidadeDeDoses: 3);
+      final vacinaC2 = VacinaModel(nome: 'BCG', descricao: 'Previne formas graves de tuberculose', doseTexto: 'Dose única', quantidadeDeDoses: 1);
+      final vacinaC3 = VacinaModel(nome: 'VIP (Poliomielite inativada)', descricao: 'Previne poliomielite', doseTexto: '1ª, 2ª e 3ª doses', quantidadeDeDoses: 3);
 
       final calendario = VacinasCalendarioModel(
         criancas: [vacinaC1, vacinaC2, vacinaC3],
@@ -95,8 +99,8 @@ void main() {
     });
   
     test('Selecting "idosos" group', () {
-      final vacina1 = VacinaModel(nome: 'Hepatite B', descricao: 'Previne hepatite B', dose: '3 doses');
-      final vacina2 = VacinaModel(nome: 'Pneumocócica 23V', descricao: '...', dose: '...');
+      final vacina1 = VacinaModel(nome: 'Hepatite B', descricao: 'Previne hepatite B', doseTexto: '3 doses', quantidadeDeDoses: 3);
+      final vacina2 = VacinaModel(nome: 'Pneumocócica 23V', descricao: '...', doseTexto: '...', quantidadeDeDoses: 1);
 
       final calendario = VacinasCalendarioModel(
         criancas: [],
@@ -115,8 +119,8 @@ void main() {
     });
 
     test('Selecting inexistent group', () {
-      final vacina1 = VacinaModel(nome: 'Hepatite B', descricao: 'Previne hepatite B', dose: '3 doses');
-      final vacina2 = VacinaModel(nome: 'BCG', descricao: 'Previne formas graves de tuberculose', dose: 'Dose única');
+      final vacina1 = VacinaModel(nome: 'Hepatite B', descricao: 'Previne hepatite B', doseTexto: '3 doses', quantidadeDeDoses: 3);
+      final vacina2 = VacinaModel(nome: 'BCG', descricao: 'Previne formas graves de tuberculose', doseTexto: 'Dose única', quantidadeDeDoses: 1);
 
       final calendario = VacinasCalendarioModel(
         criancas: [vacina1, vacina2],

@@ -7,12 +7,16 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      const MaterialApp(
+      MaterialApp(
         home: Scaffold(
           body: VacinaCard(
             titulo: 'BCG',
             descricao: 'Previne formas graves de tuberculose',
-            dose: 'Dose unica',
+            doseTexto: 'Dose unica', 
+            statusDoses: const [false], 
+            isCompleta: false, 
+            isEmProgresso: false,
+            onDoseToggled: (index, isTomada) {}, 
           ),
         ),
       ),
@@ -20,7 +24,9 @@ void main() {
 
     expect(find.text('BCG'), findsOneWidget);
     expect(find.text('Previne formas graves de tuberculose'), findsOneWidget);
-    expect(find.text('Dose: Dose unica'), findsOneWidget);
+    expect(find.text('Dose recomendada: Dose unica'), findsOneWidget);
+    
     expect(find.byIcon(Icons.vaccines), findsOneWidget);
+    expect(find.text('Meu Progresso:'), findsOneWidget);
   });
 }

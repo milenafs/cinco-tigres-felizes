@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cinco_tigres_felizes/features/vaccines/presentation/pages/vaccination_page.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/presentation/pages/vaccine_page.dart';
 import 'package:cinco_tigres_felizes/features/habits/presentation/pages/hydration_page.dart';
 import 'package:cinco_tigres_felizes/features/habits/presentation/pages/reminder_page.dart';
 

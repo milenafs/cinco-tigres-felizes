@@ -1,24 +1,32 @@
 class VacinaModel {
   final String nome;
   final String descricao;
-  final String dose;
+  final String doseTexto; 
+  final int quantidadeDeDoses; 
 
   VacinaModel({
     required this.nome,
     required this.descricao,
-    required this.dose,
+    required this.doseTexto,
+    required this.quantidadeDeDoses,
   });
 
   factory VacinaModel.fromJson(Map<String, dynamic> json) {
     return VacinaModel(
       nome: json['nome'] as String,
       descricao: json['descricao'] as String,
-      dose: json['dose'] as String,
+      doseTexto: json['dose_texto'] as String,
+      quantidadeDeDoses: int.parse(json['quantidade_doses'].toString()),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'nome': nome, 'descricao': descricao, 'dose': dose};
+    return {
+      'nome': nome,
+      'descricao': descricao,
+      'dose_texto': doseTexto,
+      'quantidade_doses': quantidadeDeDoses,
+    };
   }
 }
 
@@ -67,9 +75,7 @@ class VacinasCalendarioModel {
   Map<String, dynamic> toJson() {
     return {
       'crianca_0_10': criancas.map((vacina) => vacina.toJson()).toList(),
-      'adolescente_11_19': adolescentes
-          .map((vacina) => vacina.toJson())
-          .toList(),
+      'adolescente_11_19': adolescentes.map((vacina) => vacina.toJson()).toList(),
       'adulto_20_59': adultos.map((vacina) => vacina.toJson()).toList(),
       'gestantes': gestantes.map((vacina) => vacina.toJson()).toList(),
       'idoso_60_mais': idosos.map((vacina) => vacina.toJson()).toList(),
