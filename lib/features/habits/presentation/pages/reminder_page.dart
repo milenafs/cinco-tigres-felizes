@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'cadastro_lembrete_agua_screen.dart';
-import 'visualizacao_agua_screen.dart';
+import 'create_reminder_page.dart';
+import 'view_reminder_page.dart';
 
 class LembreteAguaScreen extends StatefulWidget {
   const LembreteAguaScreen({super.key});

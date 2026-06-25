@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cinco_tigres_felizes/services/vacinas_service.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/services/vaccine_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

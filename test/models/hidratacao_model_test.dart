@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cinco_tigres_felizes/models/hidratacao_model.dart';
+import 'package:cinco_tigres_felizes/features/habits/models/hydration_model.dart';
 
 void main() {
   group('Teste do HidratacaoModel', () {

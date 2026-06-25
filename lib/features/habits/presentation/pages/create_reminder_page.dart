@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/lembrete_agua_model.dart';
+import 'package:cinco_tigres_felizes/features/habits/models/water_reminder_model.dart';
 
 class CadastroLembreteScreen extends StatefulWidget {
   const CadastroLembreteScreen({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/hidratacao_model.dart';
+import 'package:cinco_tigres_felizes/features/habits/models/hydration_model.dart';
 
 class HidratacaoScreen extends StatefulWidget {
   const HidratacaoScreen({super.key});

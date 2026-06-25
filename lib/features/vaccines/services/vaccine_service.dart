@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:cinco_tigres_felizes/models/vacina_model.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/models/vaccine_model.dart';
 
 class VacinasService {
-  static const String _vacinasAssetPath = 'lib/data/vacinas.json';
+  static const String _vacinasAssetPath = 'lib/features/vaccines/data/vacinas.json';
 
   Future<VacinasCalendarioModel> carregarVacinas() async {
     final jsonString = await rootBundle.loadString(_vacinasAssetPath);

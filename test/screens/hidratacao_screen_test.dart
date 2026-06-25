@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cinco_tigres_felizes/screens/hidratacao_screen.dart';
+import 'package:cinco_tigres_felizes/features/habits/presentation/pages/hydration_page.dart';
 
 void main() {
   testWidgets('Deve exibir a meta inicial e porcentagem zero', (

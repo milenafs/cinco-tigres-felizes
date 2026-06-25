@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cinco_tigres_felizes/screens/vacinacao_screen.dart';
-import 'package:cinco_tigres_felizes/screens/hidratacao_screen.dart';
-import 'package:cinco_tigres_felizes/screens/lembrete_agua_screen.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/presentation/pages/vaccination_page.dart';
+import 'package:cinco_tigres_felizes/features/habits/presentation/pages/hydration_page.dart';
+import 'package:cinco_tigres_felizes/features/habits/presentation/pages/reminder_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

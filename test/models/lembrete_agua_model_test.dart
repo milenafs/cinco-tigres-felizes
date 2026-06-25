@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cinco_tigres_felizes/models/lembrete_agua_model.dart';
+import 'package:cinco_tigres_felizes/features/habits/models/water_reminder_model.dart';
 
 void main() {
   group('LembreteAguaModel', () {

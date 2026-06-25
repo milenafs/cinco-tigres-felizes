@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cinco_tigres_felizes/widgets/vacina_card.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/presentation/widgets/vaccine_card.dart';
 
 void main() {
   testWidgets('renders title, description, dose and vaccine icon', (
