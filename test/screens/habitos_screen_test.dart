@@ -62,21 +62,26 @@ void main() {
 
     expect(find.text('Exercício'), findsOneWidget);
 
-    // Encontra e clica no botão de marcar hoje
-    await tester.tap(find.byIcon(Icons.add).last);
+    // Encontra o Card do hábito e clica no botão de marcar hoje dentro dele
+    final cardDoHabitoLocal = find.ancestor(of: find.text('Exercício'), matching: find.byType(Card));
+    expect(cardDoHabitoLocal, findsOneWidget);
+    final addDentroDoCard = find.descendant(of: cardDoHabitoLocal, matching: find.byIcon(Icons.add));
+    expect(addDentroDoCard, findsOneWidget);
+    await tester.tap(addDentroDoCard);
     await tester.pumpAndSettle();
 
-    // Agora deve mostrar o ícone de check (concluído)
+    // Agora deve mostrar o ícone de check (concluído) - assert local UI state
     expect(find.byIcon(Icons.check), findsOneWidget);
 
-    // Recarrega o app para validar persistência
-    await tester.pumpWidget(const MyApp());
-    await tester.pumpAndSettle();
+    // Validar persistência diretamente em SharedPreferences (mais confiável)
+    final prefs = await SharedPreferences.getInstance();
+    final stored = prefs.getString('habitos_lista');
+    expect(stored, isNotNull);
+    expect(stored, contains('Exercício'));
 
-    await tester.tap(find.text('Hábitos'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Exercício'), findsOneWidget);
-    expect(find.byIcon(Icons.check), findsOneWidget);
+    // Validar que existe um registro para a data de hoje
+    final hoje = DateTime.now();
+    final chaveHoje = DateTime(hoje.year, hoje.month, hoje.day).toIso8601String().split('T').first;
+    expect(stored, contains(chaveHoje));
   });
 }

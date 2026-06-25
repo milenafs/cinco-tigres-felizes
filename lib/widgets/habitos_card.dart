@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/habit_model.dart';
+import '../models/habitos_model.dart';
 
 class CartaoHabito extends StatelessWidget {
   final HabitoModel habito;
@@ -133,15 +133,17 @@ class CartaoHabito extends StatelessWidget {
 
   Color _cor(double percentual) {
     if (percentual == 0) return Colors.grey.shade200;
-    if (percentual < 0.5) return Colors.orange.shade200;
-    if (percentual < 1.0) return Colors.yellow.shade300;
+    if (percentual < 1.0) {
+      return Color.lerp(const Color.fromARGB(255, 230, 154, 78), const Color.fromARGB(255, 191, 255, 88), percentual)!;
+    }
     return Colors.green;
   }
 
   Color _corBorda(double percentual) {
     if (percentual == 0) return Colors.grey.shade400;
-    if (percentual < 0.5) return Colors.orange.shade400;
-    if (percentual < 1.0) return Colors.yellow.shade600;
+    if (percentual < 1.0) {
+      return Color.lerp(const Color.fromARGB(255, 230, 154, 78), const Color.fromARGB(255, 191, 255, 88), percentual)!;
+    }
     return Colors.green.shade700;
   }
 
