@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cinco_tigres_felizes/features/vaccines/presentation/pages/vaccine_page.dart';
 import 'package:cinco_tigres_felizes/features/habits/presentation/pages/hydration_page.dart';
 import 'package:cinco_tigres_felizes/features/habits/presentation/pages/reminder_page.dart';
+import 'package:cinco_tigres_felizes/features/habits/presentation/pages/habits_page.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -57,6 +59,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     icon: const Icon(Icons.notifications_active),
                     label: const Text('Lembrete de Água'),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Botão Hábitos
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const HabitosScreen(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.list_alt),
+                    label: const Text('Hábitos'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green.shade100,
+                      foregroundColor: Colors.green.shade900,
+                    ),
                   ),
                 ),
 
