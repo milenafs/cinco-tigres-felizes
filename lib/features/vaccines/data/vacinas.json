@@ -1,0 +1,182 @@
+{
+  "crianca_0_10": [
+    {
+      "nome": "BCG",
+      "descricao": "Previne formas graves de tuberculose",
+      "dose": "Dose única"
+    },
+    {
+      "nome": "Hepatite B",
+      "descricao": "Previne hepatite B",
+      "dose": "Dose única"
+    },
+    {
+      "nome": "Pentavalente (DTP/HB/Hib)",
+      "descricao": "Previne difteria, tétano, coqueluche, hepatite B e Hib",
+      "dose": "1ª, 2ª e 3ª doses"
+    },
+    {
+      "nome": "VIP (Poliomielite inativada)",
+      "descricao": "Previne poliomielite",
+      "dose": "1ª, 2ª e 3ª doses"
+    },
+    {
+      "nome": "Pneumocócica 10V",
+      "descricao": "Previne pneumonia, otite e meningite",
+      "dose": "1ª, 2ª doses e reforço"
+    },
+    {
+      "nome": "Rotavírus humano G1P1",
+      "descricao": "Previne diarreia por rotavírus",
+      "dose": "1ª e 2ª doses"
+    },
+    {
+      "nome": "Meningocócica C",
+      "descricao": "Previne doença meningocócica",
+      "dose": "1ª e 2ª doses"
+    },
+    {
+      "nome": "Febre amarela",
+      "descricao": "Previne febre amarela",
+      "dose": "Dose única"
+    },
+    {
+      "nome": "Tríplice viral",
+      "descricao": "Previne sarampo, caxumba e rubéola",
+      "dose": "1ª dose"
+    },
+    {
+      "nome": "Hepatite A",
+      "descricao": "Previne hepatite A",
+      "dose": "Dose única"
+    },
+    {
+      "nome": "Poliomielite oral (VOP)",
+      "descricao": "Previne poliomielite",
+      "dose": "1º e 2º reforços"
+    },
+    {
+      "nome": "DTP",
+      "descricao": "Previne difteria, tétano e coqueluche",
+      "dose": "1º e 2º reforços"
+    },
+    {
+      "nome": "Tetra viral",
+      "descricao": "Previne sarampo, caxumba, rubéola e varicela",
+      "dose": "Dose única"
+    },
+    {
+      "nome": "Varicela",
+      "descricao": "Previne catapora",
+      "dose": "Dose"
+    }
+  ],
+  "adolescente_11_19": [
+    {
+      "nome": "HPV",
+      "descricao": "Previne papilomavírus humano",
+      "dose": "2 doses com intervalo de 6 meses"
+    },
+    {
+      "nome": "Meningocócica C",
+      "descricao": "Previne doença meningocócica",
+      "dose": "Dose única ou reforço"
+    },
+    {
+      "nome": "Hepatite B",
+      "descricao": "Previne hepatite B",
+      "dose": "3 doses"
+    },
+    {
+      "nome": "Febre amarela",
+      "descricao": "Previne febre amarela",
+      "dose": "Dose única"
+    },
+    {
+      "nome": "Dupla adulto (DT)",
+      "descricao": "Previne difteria e tétano",
+      "dose": "Reforço a cada 10 anos"
+    },
+    {
+      "nome": "Tríplice viral",
+      "descricao": "Previne sarampo, caxumba e rubéola",
+      "dose": "2 doses"
+    },
+    {
+      "nome": "Pneumocócica 23V",
+      "descricao": "Previne doenças por pneumococo",
+      "dose": "1 dose (grupos específicos)"
+    }
+  ],
+  "adulto_20_59": [
+    {
+      "nome": "Hepatite B",
+      "descricao": "Previne hepatite B",
+      "dose": "3 doses"
+    },
+    {
+      "nome": "Febre amarela",
+      "descricao": "Previne febre amarela",
+      "dose": "Dose única"
+    },
+    {
+      "nome": "Dupla adulto (DT)",
+      "descricao": "Previne difteria e tétano",
+      "dose": "Reforço a cada 10 anos"
+    },
+    {
+      "nome": "Tríplice viral",
+      "descricao": "Previne sarampo, caxumba e rubéola",
+      "dose": "1 ou 2 doses dependendo da idade"
+    },
+    {
+      "nome": "Pneumocócica 23V",
+      "descricao": "Previne doenças por pneumococo",
+      "dose": "1 dose (grupos específicos)"
+    }
+  ],
+  "gestante": [
+    {
+      "nome": "Hepatite B",
+      "descricao": "Previne hepatite B",
+      "dose": "3 doses"
+    },
+    {
+      "nome": "Dupla adulto (DT)",
+      "descricao": "Previne difteria e tétano",
+      "dose": "3 doses"
+    },
+    {
+      "nome": "dTPa",
+      "descricao": "Previne difteria, tétano e coqueluche",
+      "dose": "1 dose por gestação"
+    }
+  ],
+  "idoso_60_mais": [
+    {
+      "nome": "Hepatite B",
+      "descricao": "Previne hepatite B",
+      "dose": "3 doses"
+    },
+    {
+      "nome": "Febre amarela",
+      "descricao": "Previne febre amarela",
+      "dose": "Dose única"
+    },
+    {
+      "nome": "Tríplice viral",
+      "descricao": "Previne sarampo, caxumba e rubéola",
+      "dose": "1 ou 2 doses dependendo histórico"
+    },
+    {
+      "nome": "Dupla adulto (DT)",
+      "descricao": "Previne difteria e tétano",
+      "dose": "Reforço a cada 10 anos"
+    },
+    {
+      "nome": "Pneumocócica 23V",
+      "descricao": "Previne doenças por pneumococo",
+      "dose": "1 dose (grupos específicos)"
+    }
+  ]
+}
