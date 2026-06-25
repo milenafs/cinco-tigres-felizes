@@ -30,6 +30,29 @@ lib/
 ```
 <img width="548" height="588" alt="image" src="https://github.com/user-attachments/assets/d102a041-143a-454f-b356-90b2b3bbd68a" />
 
+---
+
+# Especificação de Requisitos e Histórias de Usuário
+
+Abaixo estão definidos os Épicos e as Histórias de Usuário para o desenvolvimento do Cinco Tigres Felizes, escritos no formato Connextra e priorizados por valor de negócio. Todo o detalhamento, critérios de aceitação e acompanhamento de status estão registrados no **Quadro de Projetos (GitHub Projects)** e na aba de **Issues** deste repositório.
+
+## Resumo do Backlog Priorizado
+
+| Ordem | ID | História | Épico | Prioridade |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | HU 1.1 | Cadastro de conta | Gestão de Acesso | Alta |
+| 2 | HU 1.2 | Login com email e senha | Gestão de Acesso | Alta |
+| 3 | HU 2.1 | Registro e acompanhamento de hábitos | Hábitos/Gamificação | Alta |
+| 4 | HU 2.2 | Controle de ingestão de água | Hábitos/Gamificação | Alta |
+| 5 | HU 3.1 | Visualização de vacinas por faixa etária | Gestão de Vacinas | Média-Alta |
+| 6 | HU 3.2 | Marcação de doses concluídas | Gestão de Vacinas | Média-Alta |
+| 7 | HU 2.3 | Sistema de selos e conquistas | Hábitos/Gamificação | Média |
+| 8 | HU 1.4 | Gerenciamento de perfil | Gestão de Acesso | Média |
+| 9 | HU 2.4 | Streaks de hábitos | Hábitos/Gamificação | Média |
+| 10 | HU 1.3 | Recuperação de senha | Gestão de Acesso | Baixa |
+| 11 | HU 3.3 | Filtro e busca no catálogo de vacinas | Gestão de Vacinas | Baixa |
+
+> **Nota sobre priorização:** O backlog está ordenado de forma decrescente por valor. O acesso à plataforma (Épico 1) é bloqueante, o rastreamento de hábitos (Épico 2) é o núcleo de valor e a gestão de vacinas (Épico 3) é o diferencial competitivo.
 
 ## Getting Started
 
