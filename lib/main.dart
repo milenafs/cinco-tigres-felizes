@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cinco_tigres_felizes/features/access/presentation/pages/home_page.dart';
 import 'package:provider/provider.dart';
-import 'package:cinco_tigres_felizes/features/vaccines/services/vaccine_service.dart'; 
+import 'features/habits/services/hydration_service.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/services/vaccine_service.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => VacinasService()), 
+        ChangeNotifierProvider(create: (context) => HidratacaoService()),
+        ChangeNotifierProvider(create: (context) => VacinasService()),
       ],
       child: const MyApp(),
     ),
