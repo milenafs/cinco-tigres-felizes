@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cinco_tigres_felizes/screens/home_screen.dart';
+import 'package:cinco_tigres_felizes/features/access/presentation/pages/home_page.dart';
 
 void main() {
   runApp(const MyApp());
