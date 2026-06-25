@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cinco_tigres_felizes/models/vacina_model.dart';
-import 'package:cinco_tigres_felizes/services/vacinas_service.dart';
-import 'package:cinco_tigres_felizes/widgets/vacina_card.dart';
-import 'package:cinco_tigres_felizes/widgets/filtro_vacina.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/models/vaccine_model.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/services/vaccine_service.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/presentation/widgets/vaccine_card.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/presentation/widgets/filter_modal.dart';
 
 class VacinacaoScreen extends StatefulWidget {
   const VacinacaoScreen({super.key});

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/habitos_model.dart';
+import '../models/habits_model.dart';
 
 class HabitoService {
   static const String _habitosKey = 'habitos_lista';

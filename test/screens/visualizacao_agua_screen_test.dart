@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cinco_tigres_felizes/screens/visualizacao_agua_screen.dart';
+import 'package:cinco_tigres_felizes/features/habits/presentation/pages/view_reminder_page.dart';
 
 void main() {
   testWidgets('Deve exibir estado vazio quando não houver horário salvo', (WidgetTester tester) async {

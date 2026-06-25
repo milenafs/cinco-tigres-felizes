@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/habitos_model.dart';
+import '../../models/habits_model.dart';
 
 class FormularioHabitoScreen extends StatefulWidget {
   final HabitoModel? habito;

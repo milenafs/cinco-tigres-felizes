@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../models/habitos_model.dart';
-import '../services/habitos_service.dart';
+import '../../models/habits_model.dart';
+import '../../services/habitos_service.dart';
 import '../widgets/habitos_card.dart';
-import 'habitos_form_screen.dart';
+import 'habits_form_page.dart';
 
 class HabitosScreen extends StatefulWidget {
   const HabitosScreen({super.key});

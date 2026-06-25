@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cinco_tigres_felizes/main.dart';
-import 'package:cinco_tigres_felizes/screens/vacinacao_screen.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/presentation/pages/vaccination_page.dart';
 
 void main() {
   testWidgets('opens vaccination screen from home button', (

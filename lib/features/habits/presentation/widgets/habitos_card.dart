@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/habitos_model.dart';
+import '../../models/habits_model.dart';
 
 class CartaoHabito extends StatelessWidget {
   final HabitoModel habito;

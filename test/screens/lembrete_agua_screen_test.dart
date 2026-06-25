@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cinco_tigres_felizes/main.dart';
-import 'package:cinco_tigres_felizes/screens/lembrete_agua_screen.dart';
-import 'package:cinco_tigres_felizes/screens/cadastro_lembrete_agua_screen.dart';
+import 'package:cinco_tigres_felizes/features/habits/presentation/pages/reminder_page.dart';
+import 'package:cinco_tigres_felizes/features/habits/presentation/pages/create_reminder_page.dart';
 
 void main() {
   testWidgets('opens water reminder screen from home', (
