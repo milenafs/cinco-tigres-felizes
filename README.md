@@ -12,24 +12,67 @@ O presente projeto busca implementar features que auxiliem a promover a conscien
 de medidas importantes relacionadas à sua saúde, como atualização da carteira de vacinação, lembretes de medicamentos
 e de consultas, bem como uma pesquisa eficiente sobre a disponibilidade de remédios no SUS
 
-## Arquitetura do projeto
+# Arquitetura do Projeto
 
-O projeto segue a **Arquitetura Baseada em Camadas**, também conhecida como N-tier, essa arquitetura estrutura o projeto em camadas independentes. Um exemplo famoso dessa arquitetura é o modelo MVC (Model, View, Controller), o View é responsável pela UI, o Model é responsável pelos dados e o Controller pela manipulação dos dados.
+A arquitetura da plataforma foi desenhada para viabilizar a entrega inicial do produto de forma ágil, preservando manutenibilidade e potencial de evolução futura. Três estilos arquiteturais foram considerados, cada um respondendo a uma dimensão diferente do sistema.
 
-A estrutura desse projeto se assemelha ao modelo MVC com pequenas adaptações às especificidades de um projeto mobile. A camada de Data mantém o dados usados pela aplicação, a camada Models tem os modelos de dados da aplicação, Screens tem as telas do aplicativo, Services acessa os dados guardados e a camada de Widgets contém componentes visuais compartilhados por várias telas.
+---
 
-O principal benefício dessa arquitetura é a facilidade de entendimento e manutenção do projeto, além de isolar responsabilidades deixando o código mais limpo e organizado.
+## 1. Monólito Modular — Dimensão de Implantação
+
+**Status: implementado**
+
+Toda a aplicação é executada em um único processo Flutter. O código é internamente particionado em módulos independentes, alinhados aos épicos do produto:
 
 ```
 lib/
-├── data/             
-├── screens/                
-├── widgets/      
-├── models/     
-└── services/             
+├── features/
+│   ├── access/        ← Épico 1: Gestão de Acesso
+│   ├── habits/        ← Épico 2: Rastreamento de Hábitos e Gamificação
+│   └── vaccines/      ← Épico 3: Gestão de Vacinas
 ```
-<img width="548" height="588" alt="image" src="https://github.com/user-attachments/assets/d102a041-143a-454f-b356-90b2b3bbd68a" />
 
+Cada módulo é autossuficiente — possui suas próprias camadas de dados, domínio, serviço e apresentação — e não importa diretamente de outros módulos. A comunicação entre módulos ocorre apenas via camadas de integração explícitas (como o Provider registrado na `main.dart`).
+
+Essa escolha garante velocidade de entrega agora e viabilidade de extração futura: caso o módulo de hábitos demande alta escalabilidade, ele pode ser isolado em um microsserviço sem exigir refatoração do restante da aplicação.
+
+---
+
+## 2. Arquitetura em Camadas — Dimensão de Estrutura Lógica
+
+**Status: parcialmente implementado (módulo `vaccines`)**
+
+Para a organização interna de cada módulo, o estilo adotado é a Arquitetura em Camadas, com separação estrita de responsabilidades e fluxo de dependência unidirecional:
+
+```
+presentation → services → domain ← data
+```
+
+Cada camada tem uma responsabilidade única e não conhece os detalhes das camadas acima dela:
+
+| Camada | Responsabilidade | Exemplos no módulo `vaccines` |
+|---|---|---|
+| **Apresentação** | Renderizar a UI e capturar interações do usuário | `VacinacaoScreen`, `VacinaCard`, `FiltroModal` |
+| **Serviço** | Centralizar lógica de aplicação e gerência de estado | `VacinasService` |
+| **Domínio** | Entidades puras e contratos — sem dependência do Flutter | `Vacina`, `CalendarioVacinas`, `IVacinasRepository` |
+| **Dados** | Comunicação com infraestrutura (arquivos, armazenamento local) | `VacinasRepository`, `VacinaModel` |
+
+A implementação completa deste estilo nos módulos `access` e `habits` está prevista como evolução futura do projeto.
+
+---
+
+## 3. Publish/Subscribe — Dimensão de Comunicação
+
+**Status: planejado — não implementado**
+
+O estilo PUB/SUB foi desenhado para integrar os módulos de forma reativa e desacoplada. A plataforma possui requisitos de gamificação que exigem que eventos de um módulo disparem reações em outro sem acoplamento direto entre eles.
+
+O fluxo planejado funciona da seguinte forma: quando o usuário conclui um registro de hábito, o módulo de Hábitos emite um evento. O módulo de Gamificação escuta esse evento de forma passiva e decide, por conta própria, se deve incrementar uma streak ou conceder um selo — sem que as regras de negócio de um módulo interfiram no escopo do outro.
+
+Esse estilo não será implementado no escopo atual do projeto, mas a separação modular adotada no Monólito Modular foi desenhada para acomodá-lo: cada módulo já possui fronteiras bem definidas que funcionariam naturalmente como publishers e subscribers.
+
+## Desenho detalhado da arquitetura
+[Diagrama C4 Model](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=Diagrama%20C4%20Model%20-%20Plataforma%20de%20sa%C3%BAde%20e%20bem-estar&dark=auto#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1Q4tgUZU3jcvvosxUZNgHhz9achLs6Vj6%26export%3Ddownload)
 ---
 
 # Especificação de Requisitos e Histórias de Usuário

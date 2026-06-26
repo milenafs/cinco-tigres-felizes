@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart'; 
-import 'package:shared_preferences/shared_preferences.dart'; 
+import 'package:provider/provider.dart';
 import 'package:cinco_tigres_felizes/main.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/domain/repositories/i_vaccines_repository.dart';
 import 'package:cinco_tigres_felizes/features/vaccines/presentation/pages/vaccine_page.dart';
 import 'package:cinco_tigres_felizes/features/vaccines/services/vaccine_service.dart';
+import './helpers/fake_vaccines_repository.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
-    SharedPreferences.setMockInitialValues({});
-  });
-
-  testWidgets('opens vaccination screen from home button', (
+  testWidgets('abre a tela de vacinação a partir do botão na home', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => VacinasService()),
+          Provider<IVacinasRepository>(
+            create: (_) => FakeVacinasRepository(),
+          ),
+          ChangeNotifierProxyProvider<IVacinasRepository, VacinasService>(
+            create: (ctx) => VacinasService(ctx.read<IVacinasRepository>()),
+            update: (_, repo, previous) => previous ?? VacinasService(repo),
+          ),
         ],
-        child: const MyApp(), 
+        child: const MyApp(),
       ),
     );
 
@@ -29,9 +32,7 @@ void main() {
     expect(find.byIcon(Icons.vaccines), findsOneWidget);
 
     await tester.tap(find.text('Abrir Vacinação'));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 500));
-    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
 
     expect(find.byType(VacinacaoScreen), findsOneWidget);
   });
