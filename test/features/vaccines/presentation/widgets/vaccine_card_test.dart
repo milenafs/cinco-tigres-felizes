@@ -21,7 +21,7 @@ void main() {
           statusDoses: statusDoses,
           isCompleta: isCompleta,
           isEmProgresso: isEmProgresso,
-          onDoseToggled: onDoseToggled ?? (_, __) {},
+          onDoseToggled: onDoseToggled ?? (_, _) {},
         ),
       ),
     );
