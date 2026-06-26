@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cinco_tigres_felizes/features/vaccines/models/vaccine_model.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/domain/entities/vaccination_schedule.dart';
 import 'package:cinco_tigres_felizes/features/vaccines/services/vaccine_service.dart';
 import 'package:cinco_tigres_felizes/features/vaccines/presentation/widgets/vaccine_card.dart';
 import 'package:cinco_tigres_felizes/features/vaccines/presentation/widgets/filter_modal.dart';
@@ -20,27 +20,25 @@ class _VacinacaoScreenState extends State<VacinacaoScreen> {
     final service = context.watch<VacinasService>();
 
     if (service.calendario == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    List<VacinaModel> listaFiltrada = service.calendario!.selecionarLista(_filtroAtual);
-    List<VacinaModel> vacinasPendentes = listaFiltrada.where((v) => !service.isVacinaCompleta(v)).toList();
-    
-    final Map<String, VacinaModel> vacinasUnicas = {};
-    for (var vacina in [
+    final listaFiltrada = service.calendario!.selecionarLista(_filtroAtual);
+    final vacinasPendentes =
+        listaFiltrada.where((v) => !service.isVacinaCompleta(v)).toList();
+
+    final vacinasUnicas = <String, Vacina>{};
+    for (final vacina in [
       ...service.calendario!.criancas,
       ...service.calendario!.adolescentes,
       ...service.calendario!.adultos,
       ...service.calendario!.gestantes,
       ...service.calendario!.idosos,
     ]) {
-      vacinasUnicas[vacina.nome] ??= vacina; 
+      vacinasUnicas.putIfAbsent(vacina.nome, () => vacina);
     }
-    List<VacinaModel> todasAsVacinas = vacinasUnicas.values.toList();
-
-    List<VacinaModel> vacinasConcluidas = todasAsVacinas.where((v) => service.isVacinaCompleta(v)).toList();
+    final vacinasConcluidas =
+        vacinasUnicas.values.where((v) => service.isVacinaCompleta(v)).toList();
 
     return DefaultTabController(
       length: 2,
@@ -52,17 +50,7 @@ class _VacinacaoScreenState extends State<VacinacaoScreen> {
               padding: const EdgeInsets.only(right: 20.0),
               child: IconButton(
                 icon: const Icon(Icons.filter_list),
-                onPressed: () async {
-                  final resultado = await showModalBottomSheet<String>(
-                    context: context,
-                    builder: (context) => FiltroModal(categoriaAtual: _filtroAtual),
-                  );
-                  if (resultado != null) {
-                    setState(() {
-                      _filtroAtual = resultado;
-                    });
-                  }
-                },
+                onPressed: () => _abrirFiltro(context),
               ),
             ),
           ],
@@ -75,16 +63,45 @@ class _VacinacaoScreenState extends State<VacinacaoScreen> {
         ),
         body: TabBarView(
           children: [
-            _construirListaVacinas(vacinasPendentes, service, mensagemVazia: 'Você já tomou todas as vacinas desta categoria!'),
-            _construirListaVacinas(vacinasConcluidas, service, mensagemVazia: 'Nenhuma vacina concluída ainda. Marque suas doses!'),
+            _ListaVacinas(
+              vacinas: vacinasPendentes,
+              service: service,
+              mensagemVazia: 'Você já tomou todas as vacinas desta categoria!',
+            ),
+            _ListaVacinas(
+              vacinas: vacinasConcluidas,
+              service: service,
+              mensagemVazia: 'Nenhuma vacina concluída ainda. Marque suas doses!',
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _construirListaVacinas(List<VacinaModel> lista, VacinasService service, {required String mensagemVazia}) {
-    if (lista.isEmpty) {
+  Future<void> _abrirFiltro(BuildContext context) async {
+    final resultado = await showModalBottomSheet<String>(
+      context: context,
+      builder: (_) => FiltroModal(categoriaAtual: _filtroAtual),
+    );
+    if (resultado != null) setState(() => _filtroAtual = resultado);
+  }
+}
+
+class _ListaVacinas extends StatelessWidget {
+  const _ListaVacinas({
+    required this.vacinas,
+    required this.service,
+    required this.mensagemVazia,
+  });
+
+  final List<Vacina> vacinas;
+  final VacinasService service;
+  final String mensagemVazia;
+
+  @override
+  Widget build(BuildContext context) {
+    if (vacinas.isEmpty) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(32.0),
@@ -98,23 +115,17 @@ class _VacinacaoScreenState extends State<VacinacaoScreen> {
     }
 
     return ListView.builder(
-      itemCount: lista.length,
+      itemCount: vacinas.length,
       itemBuilder: (context, index) {
-        final vacina = lista[index];
+        final vacina = vacinas[index];
         return VacinaCard(
           titulo: vacina.nome,
           descricao: vacina.descricao,
-          
-          // A ÚNICA MUDANÇA É AQUI NESSA LINHA:
-          // Antes estava vacina.dose, agora é vacina.doseTexto
-          doseTexto: vacina.doseTexto, 
-          
+          doseTexto: vacina.doseTexto,
           statusDoses: service.obterStatusDoses(vacina),
           isCompleta: service.isVacinaCompleta(vacina),
           isEmProgresso: service.isVacinaEmProgresso(vacina),
-          onDoseToggled: (indexDose, isTomada) {
-            service.alternarDose(vacina, indexDose, isTomada);
-          },
+          onDoseToggled: (i, tomada) => service.alternarDose(vacina, i, tomada),
         );
       },
     );
