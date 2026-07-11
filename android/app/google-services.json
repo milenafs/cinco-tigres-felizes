@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "75929189588",
+    "project_id": "cinco-tigres-felizes",
+    "storage_bucket": "cinco-tigres-felizes.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75929189588:android:b08459a39d6262fd87cf41",
+        "android_client_info": {
+          "package_name": "cinco.tigres.felizes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsQSgseEDZLGHXnZ6_wqwoNOsWCgeqZFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75929189588:android:aabd24f24915355887cf41",
+        "android_client_info": {
+          "package_name": "com.example.cinco_tigres_felizes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsQSgseEDZLGHXnZ6_wqwoNOsWCgeqZFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
