@@ -30,19 +30,31 @@ class CalendarioVacinasModel extends CalendarioVacinas {
   });
 
   factory CalendarioVacinasModel.fromJson(Map<String, dynamic> json) {
-    List<Vacina> parseLista(String chave) {
-      final lista = json[chave] as List<dynamic>? ?? [];
+    // 1. Criamos um mapa que traduz o Enum diretamente para as chaves do JSON logo na entrada
+    final mapeamentoJson = {
+      CategoriaVacina.crianca: 'crianca_0_10',
+      CategoriaVacina.adolescente: 'adolescente_11_19',
+      CategoriaVacina.adulto: 'adulto_20_59',
+      CategoriaVacina.gestante: 'gestante',
+      CategoriaVacina.idoso: 'idoso_60_mais',
+    };
+
+    // 2. O parser agora recebe o Enum em vez da String
+    List<Vacina> parseLista(CategoriaVacina categoria) {
+      final chaveTexto = mapeamentoJson[categoria]!; // Traduz o enum para o texto da API
+      final lista = json[chaveTexto] as List<dynamic>? ?? [];
+      
       return lista
           .map((item) => VacinaModel.fromJson(item as Map<String, dynamic>))
           .toList();
     }
 
     return CalendarioVacinasModel(
-      criancas:     parseLista('crianca_0_10'),
-      adolescentes: parseLista('adolescente_11_19'),
-      adultos:      parseLista('adulto_20_59'),
-      gestantes:    parseLista('gestante'),
-      idosos:       parseLista('idoso_60_mais'),
+      criancas:     parseLista(CategoriaVacina.crianca),
+      adolescentes: parseLista(CategoriaVacina.adolescente),
+      adultos:      parseLista(CategoriaVacina.adulto),
+      gestantes:    parseLista(CategoriaVacina.gestante),
+      idosos:       parseLista(CategoriaVacina.idoso),
     );
   }
 }

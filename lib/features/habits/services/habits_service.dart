@@ -24,7 +24,7 @@ class HabitoService {
         .toList();
   }
 
-  Future<void> salvarHabitos(List<HabitoModel> habitos) async {
+  Future<void> _salvarHabitos(List<HabitoModel> habitos) async {
     final prefs = await SharedPreferences.getInstance();
     final encoded = jsonEncode(habitos.map((h) => h.toJson()).toList());
     await prefs.setString(_habitosKey, encoded);
@@ -33,7 +33,7 @@ class HabitoService {
   Future<void> adicionarHabito(HabitoModel habito) async {
     final habitos = await carregarHabitos();
     habitos.insert(0, habito);
-    await salvarHabitos(habitos);
+    await _salvarHabitos(habitos);
   }
 
   Future<void> alternarConclusao(String habitoId, DateTime data) async {
@@ -44,7 +44,7 @@ class HabitoService {
     }
     final atualizado = habitos[index].alternarConclusao(data);
     habitos[index] = atualizado;
-    await salvarHabitos(habitos);
+    await _salvarHabitos(habitos);
   }
 
   Future<void> atualizarHabito(HabitoModel habitoAtualizado) async {
@@ -54,12 +54,12 @@ class HabitoService {
       return;
     }
     habitos[index] = habitoAtualizado;
-    await salvarHabitos(habitos);
+    await _salvarHabitos(habitos);
   }
 
   Future<void> removerHabito(String habitoId) async {
     final habitos = await carregarHabitos();
     habitos.removeWhere((item) => item.id == habitoId);
-    await salvarHabitos(habitos);
+    await _salvarHabitos(habitos);
   }
 }
