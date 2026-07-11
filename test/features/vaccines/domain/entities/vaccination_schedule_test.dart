@@ -44,28 +44,28 @@ void main() {
     });
 
     test('seleciona grupo crianca_0_10', () {
-      final resultado = calendario.selecionarLista('crianca_0_10');
+      final resultado = calendario.selecionarLista(CategoriaVacina.crianca);
 
       expect(resultado.length, 2);
       expect(resultado.map((v) => v.nome), containsAll(['BCG', 'VIP']));
     });
 
     test('seleciona grupo adolescente_11_19', () {
-      final resultado = calendario.selecionarLista('adolescente_11_19');
+      final resultado = calendario.selecionarLista(CategoriaVacina.adolescente);
 
       expect(resultado.length, 1);
       expect(resultado.first.nome, 'HPV');
     });
 
     test('seleciona grupo adulto_20_59', () {
-      final resultado = calendario.selecionarLista('adulto_20_59');
+      final resultado = calendario.selecionarLista(CategoriaVacina.adulto);
 
       expect(resultado.length, 1);
       expect(resultado.first.nome, 'Dupla adulto');
     });
 
     test('seleciona grupo gestante', () {
-      final resultado = calendario.selecionarLista('gestante');
+      final resultado = calendario.selecionarLista(CategoriaVacina.gestante);
 
       expect(resultado.length, 2);
       expect(resultado.map((v) => v.nome), containsAll(['Hepatite B', 'dTPa']));
@@ -73,23 +73,10 @@ void main() {
     });
 
     test('seleciona grupo idoso_60_mais', () {
-      final resultado = calendario.selecionarLista('idoso_60_mais');
+      final resultado = calendario.selecionarLista(CategoriaVacina.idoso);
 
       expect(resultado.length, 1);
       expect(resultado.first.nome, 'Pneumocócica 23V');
-    });
-
-    test('chave inexistente retorna criancas por padrão', () {
-      final resultado = calendario.selecionarLista('');
-
-      expect(resultado.length, 2);
-      expect(resultado.map((v) => v.nome), contains('BCG'));
-    });
-
-    test('chave desconhecida retorna criancas por padrão', () {
-      final resultado = calendario.selecionarLista('categoria_invalida');
-
-      expect(resultado, equals(calendario.criancas));
     });
   });
 }
