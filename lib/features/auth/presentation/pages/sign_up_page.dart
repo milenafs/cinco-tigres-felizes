@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:cinco_tigres_felizes/features/access/presentation/pages/home_page.dart';
 import 'package:cinco_tigres_felizes/features/auth/presentation/pages/login_page.dart';
-import 'package:provider/provider.dart';
 import 'package:cinco_tigres_felizes/features/auth/providers/auth_provider.dart';
+
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -11,203 +13,522 @@ class SignUpPage extends StatefulWidget {
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
+
 class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-  bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+
+  bool obscurePassword = true;
+  bool obscureConfirmPassword = true;
+
+
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
+
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+
     super.dispose();
   }
 
-  Future<void> _handleCreateAccount() async {
-    if (_passwordController.text != _confirmPasswordController.text) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("As senhas não coincidem.")));
-      return;
-    }
 
-    final authProvider = context.read<AuthProvider>();
 
-    await authProvider.signUp(
-      name: _nameController.text.trim(),
-      email: _emailController.text.trim(),
-      password: _passwordController.text,
-    );
+  Future<void> createAccount() async {
 
-    if (!mounted) return;
+    if(passwordController.text != confirmPasswordController.text){
 
-    if (authProvider.currentUser != null) {
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
-      return;
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          authProvider.errorMessage ?? "Não foi possível criar a conta.",
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "As senhas não coincidem.",
+          ),
         ),
-      ),
+      );
+
+      return;
+    }
+
+
+    final auth =
+    context.read<AuthProvider>();
+
+
+    await auth.signUp(
+      name: nameController.text.trim(),
+      email: emailController.text.trim(),
+      password: passwordController.text,
     );
+
+
+    if(!mounted) return;
+
+
+    if(auth.currentUser != null){
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const HomeScreen(),
+        ),
+      );
+
+    }else{
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            auth.errorMessage ??
+            "Não foi possível criar a conta.",
+          ),
+        ),
+      );
+
+    }
+
   }
+
+
+
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Criar conta')),
+
       body: Container(
+
         decoration: const BoxDecoration(
+
           gradient: LinearGradient(
-            colors: [Color(0xFFFFF9F2), Color(0xFFF2FFF6)],
+
+            colors: [
+
+              Color(0xFFE0F7FA),
+              Color(0xFFF1F8E9),
+
+            ],
+
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
+
           ),
+
         ),
+
+
         child: SafeArea(
+
           child: Center(
+
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+
+              padding:
+              const EdgeInsets.all(24),
+
+
+
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: Card(
-                  elevation: 8,
-                  shadowColor: Colors.black12,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(28),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          'Abra sua conta',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(fontWeight: FontWeight.w700),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Crie seu acesso para salvar suas informações.',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(color: Colors.grey.shade700),
-                        ),
-                        const SizedBox(height: 28),
-                        TextField(
-                          controller: _nameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Nome completo',
-                            prefixIcon: Icon(Icons.person_outline),
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            labelText: 'E-mail',
-                            prefixIcon: Icon(Icons.email_outlined),
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: _passwordController,
-                          obscureText: _obscurePassword,
-                          decoration: InputDecoration(
-                            labelText: 'Senha',
-                            prefixIcon: const Icon(Icons.lock_outline),
-                            border: const OutlineInputBorder(),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: _confirmPasswordController,
-                          obscureText: _obscureConfirmPassword,
-                          decoration: InputDecoration(
-                            labelText: 'Confirmar senha',
-                            prefixIcon: const Icon(Icons.lock_reset_outlined),
-                            border: const OutlineInputBorder(),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _obscureConfirmPassword =
-                                      !_obscureConfirmPassword;
-                                });
-                              },
-                              icon: Icon(
-                                _obscureConfirmPassword
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        Consumer<AuthProvider>(
-                          builder: (context, auth, child) {
-                            return FilledButton(
-                              onPressed: auth.isLoading
-                                  ? null
-                                  : _handleCreateAccount,
-                              child: auth.isLoading
-                                  ? const SizedBox(
-                                      width: 22,
-                                      height: 22,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : const Text("Criar Conta"),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute<void>(
-                                builder: (_) => const LoginPage(),
-                              ),
-                            );
-                          },
-                          child: const Text('Já tenho uma conta'),
-                        ),
-                      ],
-                    ),
-                  ),
+
+                constraints:
+                const BoxConstraints(
+                  maxWidth:420,
                 ),
+
+
+
+                child: Card(
+
+                  child: Padding(
+
+                    padding:
+                    const EdgeInsets.all(28),
+
+
+
+                    child: Column(
+
+                      crossAxisAlignment:
+                      CrossAxisAlignment.stretch,
+
+
+                      children: [
+
+
+                        Container(
+
+                          width:90,
+                          height:90,
+
+
+                          decoration:
+                          const BoxDecoration(
+
+                            color:
+                            Color(0xFFE0F2F1),
+
+                            shape:
+                            BoxShape.circle,
+
+                          ),
+
+
+
+                          child:
+                          const Icon(
+
+                            Icons.person_add_alt_1,
+
+                            size:50,
+
+                            color:
+                            Color(0xFF00897B),
+
+                          ),
+
+                        ),
+
+
+
+                        const SizedBox(height:20),
+
+
+
+                        Text(
+
+                          "Criar conta",
+
+                          textAlign:
+                          TextAlign.center,
+
+
+                          style:
+                          Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
+
+                            fontWeight:
+                            FontWeight.bold,
+
+                          ),
+
+                        ),
+
+
+
+                        const SizedBox(height:8),
+
+
+
+                        Text(
+
+                          "Crie seu acesso para salvar suas informações.",
+
+
+                          textAlign:
+                          TextAlign.center,
+
+
+                          style:
+                          TextStyle(
+
+                            color:
+                            Colors.grey.shade700,
+
+                          ),
+
+                        ),
+
+
+
+                        const SizedBox(height:30),
+
+
+
+                        TextField(
+
+                          controller:
+                          nameController,
+
+
+                          decoration:
+                          const InputDecoration(
+
+                            labelText:
+                            "Nome completo",
+
+                            prefixIcon:
+                            Icon(
+                              Icons.person_outline,
+                            ),
+
+                          ),
+
+                        ),
+
+
+
+                        const SizedBox(height:16),
+
+
+
+                        TextField(
+
+                          controller:
+                          emailController,
+
+
+                          keyboardType:
+                          TextInputType.emailAddress,
+
+
+                          decoration:
+                          const InputDecoration(
+
+                            labelText:
+                            "Email",
+
+                            prefixIcon:
+                            Icon(
+                              Icons.email_outlined,
+                            ),
+
+                          ),
+
+                        ),
+
+
+
+                        const SizedBox(height:16),
+
+
+
+                        TextField(
+
+                          controller:
+                          passwordController,
+
+
+                          obscureText:
+                          obscurePassword,
+
+
+                          decoration:
+                          InputDecoration(
+
+                            labelText:
+                            "Senha",
+
+
+                            prefixIcon:
+                            const Icon(
+                              Icons.lock_outline,
+                            ),
+
+
+                            suffixIcon:
+                            IconButton(
+
+                              icon:
+                              Icon(
+
+                                obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+
+                              ),
+
+
+                              onPressed:(){
+
+                                setState((){
+
+                                  obscurePassword =
+                                  !obscurePassword;
+
+                                });
+
+                              },
+
+                            ),
+
+                          ),
+
+                        ),
+
+
+
+                        const SizedBox(height:16),
+
+
+
+                        TextField(
+
+                          controller:
+                          confirmPasswordController,
+
+
+                          obscureText:
+                          obscureConfirmPassword,
+
+
+                          decoration:
+                          InputDecoration(
+
+                            labelText:
+                            "Confirmar senha",
+
+
+                            prefixIcon:
+                            const Icon(
+                              Icons.lock_reset,
+                            ),
+
+
+
+                            suffixIcon:
+                            IconButton(
+
+                              icon:
+                              Icon(
+
+                                obscureConfirmPassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+
+                              ),
+
+
+                              onPressed:(){
+
+                                setState((){
+
+                                  obscureConfirmPassword =
+                                  !obscureConfirmPassword;
+
+                                });
+
+                              },
+
+                            ),
+
+                          ),
+
+                        ),
+
+
+
+                        const SizedBox(height:24),
+
+
+
+                        Consumer<AuthProvider>(
+
+                          builder:(context,auth,_){
+
+
+                            return FilledButton(
+
+                              onPressed:
+                              auth.isLoading
+                              ? null
+                              : createAccount,
+
+
+                              child:
+
+                              auth.isLoading
+
+                              ?
+
+                              const SizedBox(
+
+                                width:20,
+                                height:20,
+
+                                child:
+                                CircularProgressIndicator(
+                                  strokeWidth:2,
+                                ),
+
+                              )
+
+
+                              :
+
+                              const Text(
+                                "Criar Conta",
+                              ),
+
+                            );
+
+
+                          },
+
+                        ),
+
+
+
+                        const SizedBox(height:12),
+
+
+
+                        TextButton(
+
+                          onPressed:(){
+
+                            Navigator.pushReplacement(
+
+                              context,
+
+                              MaterialPageRoute(
+
+                                builder:
+                                (_) =>
+                                const LoginPage(),
+
+                              ),
+
+                            );
+
+                          },
+
+
+                          child:
+                          const Text(
+                            "Já tenho uma conta",
+                          ),
+
+                        ),
+
+
+                      ],
+
+                    ),
+
+                  ),
+
+                ),
+
               ),
+
             ),
+
           ),
+
         ),
+
       ),
+
     );
+
   }
+
 }

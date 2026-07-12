@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:cinco_tigres_felizes/features/access/presentation/pages/home_page.dart';
 import 'package:cinco_tigres_felizes/features/auth/presentation/pages/sign_up_page.dart';
-import 'package:provider/provider.dart';
 import 'package:cinco_tigres_felizes/features/auth/providers/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,41 +13,38 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _obscurePassword = true;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  bool obscurePassword = true;
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
-    final authProvider = context.read<AuthProvider>();
+  Future<void> login() async {
+    final auth = context.read<AuthProvider>();
 
-    await authProvider.login(
-      email: _emailController.text.trim(),
-      password: _passwordController.text,
+    await auth.login(
+      email: emailController.text.trim(),
+      password: passwordController.text,
     );
 
     if (!mounted) return;
 
-    if (authProvider.currentUser != null) {
-      Navigator.of(
+    if (auth.currentUser != null) {
+      Navigator.pushReplacement(
         context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
-      return;
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(auth.errorMessage ?? "Erro ao realizar login")),
+      );
     }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          authProvider.errorMessage ?? "Não foi possível realizar o login.",
-        ),
-      ),
-    );
   }
 
   @override
@@ -55,135 +53,146 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFF7F6FF), Color(0xFFEAF4FF)],
+            colors: [Color(0xFFE0F7FA), Color(0xFFF1F8E9)],
+
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
         ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: Card(
-                  elevation: 8,
-                  shadowColor: Colors.black12,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(28),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Icon(
+
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(28),
+
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+
+                    children: [
+                      Container(
+                        width: 90,
+                        height: 90,
+
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE0F2F1),
+                          shape: BoxShape.circle,
+                        ),
+
+                        child: const Icon(
                           Icons.health_and_safety,
-                          size: 56,
-                          color: Colors.deepPurple,
+
+                          size: 50,
+
+                          color: Color(0xFF00897B),
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Bem-vindo',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(fontWeight: FontWeight.w700),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      Text(
+                        "Bem-vindo!",
+
+                        textAlign: TextAlign.center,
+
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      Text(
+                        "Entre para continuar",
+
+                        textAlign: TextAlign.center,
+
+                        style: TextStyle(color: Colors.grey.shade700),
+                      ),
+
+                      const SizedBox(height: 30),
+
+                      TextField(
+                        controller: emailController,
+
+                        keyboardType: TextInputType.emailAddress,
+
+                        decoration: const InputDecoration(
+                          labelText: "Email",
+
+                          prefixIcon: Icon(Icons.email_outlined),
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Entre para continuar no aplicativo.',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(color: Colors.grey.shade700),
-                        ),
-                        const SizedBox(height: 28),
-                        TextField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            labelText: 'E-mail',
-                            prefixIcon: Icon(Icons.email_outlined),
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: _passwordController,
-                          obscureText: _obscurePassword,
-                          decoration: InputDecoration(
-                            labelText: 'Senha',
-                            prefixIcon: const Icon(Icons.lock_outline),
-                            border: const OutlineInputBorder(),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                              ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      TextField(
+                        controller: passwordController,
+
+                        obscureText: obscurePassword,
+
+                        decoration: InputDecoration(
+                          labelText: "Senha",
+
+                          prefixIcon: const Icon(Icons.lock_outline),
+
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                             ),
+
+                            onPressed: () {
+                              setState(() {
+                                obscurePassword = !obscurePassword;
+                              });
+                            },
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Consumer<AuthProvider>(
-                          builder: (context, auth, child) {
-                            return FilledButton(
-                              onPressed: auth.isLoading ? null : _handleLogin,
-                              child: auth.isLoading
-                                  ? const SizedBox(
-                                      width: 22,
-                                      height: 22,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : const Text("Entrar"),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        OutlinedButton.icon(
-                          icon: const Icon(Icons.g_mobiledata),
-                          label: const Text('Entrar com Google'),
-                          onPressed: () async {
-                            final auth = context.read<AuthProvider>();
+                      ),
 
-                            await auth.loginWithGoogle();
+                      const SizedBox(height: 24),
 
-                            if (!context.mounted) return;
+                      Consumer<AuthProvider>(
+                        builder: (context, auth, _) {
+                          return FilledButton(
+                            onPressed: auth.isLoading ? null : login,
 
-                            if (auth.currentUser != null) {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (_) => const HomeScreen(),
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        OutlinedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (_) => const SignUpPage(),
-                              ),
-                            );
-                          },
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                            child: auth.isLoading
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Text("Entrar"),
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: 15),
+
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+
+                            MaterialPageRoute(
+                              builder: (_) => const SignUpPage(),
                             ),
-                          ),
-                          child: const Text('Criar conta'),
-                        ),
-                      ],
-                    ),
+                          );
+                        },
+
+                        child: const Text("Criar conta"),
+                      ),
+                    ],
                   ),
                 ),
               ),

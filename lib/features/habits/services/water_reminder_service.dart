@@ -43,14 +43,7 @@ class WaterReminderService extends ChangeNotifier {
         _lembrete = LembreteAguaModel.fromJson(data);
       }
     } else {
-      _lembrete = LembreteAguaModel(
-        id: 1,
-        frequenciaEmMinutos: 60,
-        horaInicio: 8,
-        horaFim: 22,
-        minutoInicio: 0,
-        minutoFim: 0,
-      );
+      _lembrete = null;
       await _settingsRef.set({
         ..._lembrete!.toJson(),
         'updatedAt': Timestamp.now(),
