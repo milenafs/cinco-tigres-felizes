@@ -1,3 +1,11 @@
+enum CategoriaVacina {
+  crianca,
+  adolescente,
+  adulto,
+  gestante,
+  idoso
+}
+
 class Vacina {
   final String nome;
   final String descricao;
@@ -27,13 +35,18 @@ class CalendarioVacinas {
     required this.idosos,
   });
 
-  List<Vacina> selecionarLista(String categoria) {
+  List<Vacina> selecionarLista(CategoriaVacina categoria) {
     switch (categoria) {
-      case 'adolescente_11_19': return adolescentes;
-      case 'adulto_20_59':      return adultos;
-      case 'gestante':          return gestantes;
-      case 'idoso_60_mais':     return idosos;
-      default:                  return criancas;
+      case CategoriaVacina.adolescente: 
+        return adolescentes;
+      case CategoriaVacina.adulto:      
+        return adultos;
+      case CategoriaVacina.gestante:    
+        return gestantes;
+      case CategoriaVacina.idoso:       
+        return idosos;
+      case CategoriaVacina.crianca:     
+        return criancas;
     }
   }
 }

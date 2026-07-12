@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:cinco_tigres_felizes/features/vaccines/domain/entities/vaccination_schedule.dart'; 
 
 class FiltroModal extends StatefulWidget {
-  final String categoriaAtual;
+  final CategoriaVacina categoriaAtual; 
 
   const FiltroModal({super.key, required this.categoriaAtual});
 
@@ -10,7 +11,7 @@ class FiltroModal extends StatefulWidget {
 }
 
 class _FiltroModalState extends State<FiltroModal> {
-  late String _categoriaSelecionada;
+  late CategoriaVacina _categoriaSelecionada;
 
   @override
   void initState() {
@@ -29,15 +30,15 @@ class _FiltroModalState extends State<FiltroModal> {
           const Text('Filtrar Vacinação', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 20),
           
-          DropdownButtonFormField<String>(
+          DropdownButtonFormField<CategoriaVacina>( 
             initialValue: _categoriaSelecionada,
             decoration: const InputDecoration(labelText: 'Selecione sua faixa etária'),
             items: const [
-              DropdownMenuItem(value: 'crianca_0_10', child: Text('Criança (0 a 10 anos)')),
-              DropdownMenuItem(value: 'adolescente_11_19', child: Text('Adolescente (11 a 19 anos)')),
-              DropdownMenuItem(value: 'adulto_20_59', child: Text('Adulto (20 a 59 anos)')),
-              DropdownMenuItem(value: 'gestante', child: Text('Gestante')),
-              DropdownMenuItem(value: 'idoso_60_mais', child: Text('Idoso (60+ anos)')),
+              DropdownMenuItem(value: CategoriaVacina.crianca, child: Text('Criança (0 a 10 anos)')),
+              DropdownMenuItem(value: CategoriaVacina.adolescente, child: Text('Adolescente (11 a 19 anos)')),
+              DropdownMenuItem(value: CategoriaVacina.adulto, child: Text('Adulto (20 a 59 anos)')),
+              DropdownMenuItem(value: CategoriaVacina.gestante, child: Text('Gestante')),
+              DropdownMenuItem(value: CategoriaVacina.idoso, child: Text('Idoso (60+ anos)')),
             ],
             onChanged: (val) => setState(() => _categoriaSelecionada = val!),
           ),
@@ -46,7 +47,7 @@ class _FiltroModalState extends State<FiltroModal> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => Navigator.pop(context, _categoriaSelecionada),
+              onPressed: () => Navigator.pop(context, _categoriaSelecionada), 
               child: const Text('Aplicar Filtro'),
             ),
           )

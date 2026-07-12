@@ -13,7 +13,7 @@ class VacinacaoScreen extends StatefulWidget {
 }
 
 class _VacinacaoScreenState extends State<VacinacaoScreen> {
-  String _filtroAtual = 'crianca_0_10';
+  CategoriaVacina _filtroAtual = CategoriaVacina.crianca;
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +26,7 @@ class _VacinacaoScreenState extends State<VacinacaoScreen> {
     final listaFiltrada = service.calendario!.selecionarLista(_filtroAtual);
     final vacinasPendentes =
         listaFiltrada.where((v) => !service.isVacinaCompleta(v)).toList();
-
-    final vacinasUnicas = <String, Vacina>{};
-    for (final vacina in [
-      ...service.calendario!.criancas,
-      ...service.calendario!.adolescentes,
-      ...service.calendario!.adultos,
-      ...service.calendario!.gestantes,
-      ...service.calendario!.idosos,
-    ]) {
-      vacinasUnicas.putIfAbsent(vacina.nome, () => vacina);
-    }
-    final vacinasConcluidas =
-        vacinasUnicas.values.where((v) => service.isVacinaCompleta(v)).toList();
+    final vacinasConcluidas = service.obterVacinasConcluidas();
 
     return DefaultTabController(
       length: 2,
@@ -80,11 +68,13 @@ class _VacinacaoScreenState extends State<VacinacaoScreen> {
   }
 
   Future<void> _abrirFiltro(BuildContext context) async {
-    final resultado = await showModalBottomSheet<String>(
+    final resultado = await showModalBottomSheet<CategoriaVacina>( // Espera receber um Enum
       context: context,
       builder: (_) => FiltroModal(categoriaAtual: _filtroAtual),
     );
-    if (resultado != null) setState(() => _filtroAtual = resultado);
+    if (resultado != null) {
+      setState(() => _filtroAtual = resultado);
+    }
   }
 }
 
