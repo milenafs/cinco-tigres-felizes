@@ -171,9 +171,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         const SizedBox(height: 24),
                         Consumer<AuthProvider>(
-                          builder: (_, auth, __) {
+                          builder: (context, auth, child) {
                             return FilledButton(
-                              onPressed: auth.isLoading ? null : _handleCreateAccount,
+                              onPressed: auth.isLoading
+                                  ? null
+                                  : _handleCreateAccount,
                               child: auth.isLoading
                                   ? const SizedBox(
                                       width: 22,

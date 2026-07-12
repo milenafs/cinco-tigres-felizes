@@ -130,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 8),
                         Consumer<AuthProvider>(
-                          builder: (_, auth, __) {
+                          builder: (context, auth, child) {
                             return FilledButton(
                               onPressed: auth.isLoading ? null : _handleLogin,
                               child: auth.isLoading
@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
 
                             await auth.loginWithGoogle();
 
-                            if (!mounted) return;
+                            if (!context.mounted) return;
 
                             if (auth.currentUser != null) {
                               Navigator.of(context).pushReplacement(
