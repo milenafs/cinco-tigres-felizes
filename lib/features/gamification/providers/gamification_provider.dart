@@ -5,10 +5,14 @@ import '../services/gamification_service.dart';
 
 class GamificationProvider extends ChangeNotifier {
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
-  final GamificationService _service = GamificationService();
+  final GamificationService _service;
 
-  GamificationProvider(this.scaffoldMessengerKey) {
-    _carregarDoBanco(); // Carrega as conquistas ao iniciar o app
+  // Injeção do service para permitir testes
+  GamificationProvider(
+    this.scaffoldMessengerKey, {
+    GamificationService? service,
+  }) : _service = service ?? GamificationService() {
+    _carregarDoBanco(); 
   }
 
   final List<BadgeModel> _badges = [

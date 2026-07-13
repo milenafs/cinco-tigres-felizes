@@ -3,8 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/badge_model.dart';
 
 class GamificationService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _db;
+  final FirebaseAuth _auth;
+
+  // Permite injetar mocks nos testes, mas usa a instância padrão em produção
+  GamificationService({
+    FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
+  })  : _db = firestore ?? FirebaseFirestore.instance,
+        _auth = auth ?? FirebaseAuth.instance;
 
   String? get _userId => _auth.currentUser?.uid;
 
@@ -37,7 +44,7 @@ class GamificationService {
         .collection('usuarios')
         .doc(_userId)
         .collection('conquistas')
-        .doc(badge.id) // O ID do documento é o ID do selo
+        .doc(badge.id)
         .set({
       'desbloqueadoEm': Timestamp.fromDate(badge.desbloqueadoEm!),
     });
