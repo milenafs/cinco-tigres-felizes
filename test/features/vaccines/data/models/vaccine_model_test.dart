@@ -11,8 +11,9 @@ void main() {
         'quantidade_doses': 1,
       };
 
-      final model = VacinaModel.fromJson(json);
+      final model = VacinaModel.fromJson(json, 'crianca_0_10_BCG');
 
+      expect(model.id, 'crianca_0_10_BCG');
       expect(model.nome, 'BCG');
       expect(model.descricao, 'Previne tuberculose');
       expect(model.doseTexto, 'Dose unica');
@@ -24,12 +25,57 @@ void main() {
         'nome': 'Hepatite B',
         'descricao': 'Previne hepatite B',
         'dose_texto': '3 doses',
-        'quantidade_doses': '3', // o JSON real vem como String
+        'quantidade_doses': '3',
       };
 
-      final model = VacinaModel.fromJson(json);
+      final model = VacinaModel.fromJson(json, 'crianca_0_10_Hepatite B');
 
+      expect(model.id, 'crianca_0_10_Hepatite B');
       expect(model.quantidadeDeDoses, 3);
+    });
+  });
+
+  group('VacinaModel - Quantidade de Doses (Análise de Valor Limite)', () {
+    /*
+     * TÉCNICA APLICADA: Análise de Valor Limite (Avaliação A5)
+     * Variável: quantidade_doses
+     * Limites identificados para o parser numérico: 
+     * - 0 (Limite inferior absoluto - Trata casos excepcionais/inválidos na conversão do dado)
+     * - 1 (Limite inferior funcional válido - Cenário de dose única)
+     * - 2 (Valor marginal imediatamente superior)
+     */
+
+    test('Valor Limite: 0 doses (Mínimo absoluto)', () {
+      final json = {
+        'nome': 'X',
+        'descricao': 'X',
+        'dose_texto': 'X',
+        'quantidade_doses': 0,
+      };
+      final model = VacinaModel.fromJson(json, 'id_zero');
+      expect(model.quantidadeDeDoses, 0);
+    });
+
+    test('Valor Limite: 1 dose (Mínimo funcional válido)', () {
+      final json = {
+        'nome': 'X',
+        'descricao': 'X',
+        'dose_texto': 'X',
+        'quantidade_doses': 1,
+      };
+      final model = VacinaModel.fromJson(json, 'id_um');
+      expect(model.quantidadeDeDoses, 1);
+    });
+
+    test('Valor Limite: 2 doses (Margem acima do limite)', () {
+      final json = {
+        'nome': 'X',
+        'descricao': 'X',
+        'dose_texto': 'X',
+        'quantidade_doses': 2,
+      };
+      final model = VacinaModel.fromJson(json, 'id_dois');
+      expect(model.quantidadeDeDoses, 2);
     });
   });
 
@@ -61,15 +107,16 @@ void main() {
 
       expect(calendario.criancas.length, 1);
       expect(calendario.criancas.first.nome, 'BCG');
+      expect(calendario.criancas.first.id, 'crianca_0_10_BCG');
       expect(calendario.gestantes.length, 1);
       expect(calendario.gestantes.first.nome, 'dTPa');
+      expect(calendario.gestantes.first.id, 'gestante_dTPa');
       expect(calendario.adolescentes, isEmpty);
       expect(calendario.adultos, isEmpty);
       expect(calendario.idosos, isEmpty);
     });
 
     test('fromJson com grupo ausente no JSON retorna lista vazia', () {
-      // Garante robustez caso o JSON evolua e adicione novos grupos
       final json = {
         'crianca_0_10': <Map<String, dynamic>>[],
         'adolescente_11_19': <Map<String, dynamic>>[],

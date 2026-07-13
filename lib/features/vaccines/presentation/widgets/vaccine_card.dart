@@ -61,7 +61,10 @@ class VacinaCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(titulo, style: Theme.of(context).textTheme.titleMedium),
+                      Text(
+                        titulo,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
                       const SizedBox(height: 6),
                       Text(
                         descricao,
@@ -77,9 +80,9 @@ class VacinaCard extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const Divider(height: 24),
-            
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -92,12 +95,20 @@ class VacinaCard extends StatelessWidget {
                     final tomada = statusDoses[index];
                     return IconButton(
                       icon: Icon(
-                        tomada ? Icons.check_circle : Icons.radio_button_unchecked,
-                        color: tomada ? (isCompleta ? Colors.green : Colors.amber.shade700) : Colors.grey,
+                        tomada
+                            ? Icons.check_circle
+                            : Icons.radio_button_unchecked,
+                        color: tomada
+                            ? (isCompleta
+                                  ? Colors.green
+                                  : Colors.amber.shade700)
+                            : Colors.grey,
                         size: 28,
                       ),
                       onPressed: () => onDoseToggled(index, !tomada),
-                      tooltip: tomada ? 'Desmarcar dose ${index + 1}' : 'Marcar dose ${index + 1}',
+                      tooltip: tomada
+                          ? 'Desmarcar dose ${index + 1}'
+                          : 'Marcar dose ${index + 1}',
                     );
                   }),
                 ),
@@ -108,7 +119,11 @@ class VacinaCard extends StatelessWidget {
             if (isCompleta)
               _construirSelo('Vacinação Completa', Colors.green, Icons.verified)
             else if (isEmProgresso)
-              _construirSelo('Em Andamento', Colors.amber.shade700, Icons.timelapse),
+              _construirSelo(
+                'Em Andamento',
+                Colors.amber.shade700,
+                Icons.timelapse,
+              ),
           ],
         ),
       ),
@@ -130,7 +145,10 @@ class VacinaCard extends StatelessWidget {
           const SizedBox(width: 6),
           Text(
             texto,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),

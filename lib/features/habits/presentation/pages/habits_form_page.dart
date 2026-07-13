@@ -46,7 +46,9 @@ class _FormularioHabitoState extends State<FormularioHabitoScreen> {
     final habito = widget.habito != null
         ? widget.habito!.copyWith(nome: nome)
         : HabitoModel(
-            id: widget.habito?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+            id:
+                widget.habito?.id ??
+                DateTime.now().millisecondsSinceEpoch.toString(),
             nome: nome,
             tipo: _tipo,
             vezesPorDia: vezesPorDia,
@@ -129,7 +131,11 @@ class _FormularioHabitoState extends State<FormularioHabitoScreen> {
                 ],
               ] else ...[
                 TextFormField(
-                  controller: TextEditingController(text: _tipo == TipoFrequenciaHabito.diario ? 'Diário' : 'X vezes por dia'),
+                  controller: TextEditingController(
+                    text: _tipo == TipoFrequenciaHabito.diario
+                        ? 'Diário'
+                        : 'X vezes por dia',
+                  ),
                   enabled: false,
                   decoration: const InputDecoration(
                     labelText: 'Tipo de frequência',
@@ -139,7 +145,9 @@ class _FormularioHabitoState extends State<FormularioHabitoScreen> {
                 const SizedBox(height: 16),
                 if (_tipo == TipoFrequenciaHabito.vezesPorDia) ...[
                   TextFormField(
-                    controller: TextEditingController(text: _vezesController.text),
+                    controller: TextEditingController(
+                      text: _vezesController.text,
+                    ),
                     enabled: false,
                     decoration: const InputDecoration(
                       labelText: 'Vezes por dia',

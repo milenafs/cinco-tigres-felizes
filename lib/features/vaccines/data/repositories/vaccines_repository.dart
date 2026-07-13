@@ -34,11 +34,16 @@ class VacinasRepository implements IVacinasRepository {
     String category,
   ) => _firestore.collection('vaccines').doc(category).collection('vaccines');
 
-  List<Vacina> _parseVacinas(QuerySnapshot<Map<String, dynamic>> snapshot) {
+  List<Vacina> _parseVacinas(
+    QuerySnapshot<Map<String, dynamic>> snapshot,
+    String category,
+  ) {
     return snapshot.docs.map((doc) {
       final data = doc.data();
+      final nomeVacina = data['nome'] as String? ?? '';
       return VacinaModel(
-        nome: data['nome'] as String? ?? '',
+        id: '${category}_$nomeVacina',
+        nome: nomeVacina,
         descricao: data['descricao'] as String? ?? '',
         doseTexto: data['dose_texto'] as String? ?? '',
         quantidadeDeDoses: data['quantidade_doses'] is int
@@ -50,7 +55,7 @@ class VacinasRepository implements IVacinasRepository {
 
   Future<List<Vacina>> _carregarVacinasDaCategoria(String categoria) async {
     final snapshot = await _vaccinesCollection(categoria).get();
-    return _parseVacinas(snapshot);
+    return _parseVacinas(snapshot, categoria);
   }
 
   @override
@@ -80,21 +85,18 @@ class VacinasRepository implements IVacinasRepository {
         dosesPorVacina[doc.id] = List<bool>.from(dosesRaw);
       }
     }
-
     return dosesPorVacina;
   }
 
   @override
   Future<void> salvarDoses(Map<String, List<bool>> doses) async {
     final batch = _firestore.batch();
-
     for (final entry in doses.entries) {
       batch.set(_progressCollection.doc(entry.key), {
         'doses': entry.value,
         'updatedAt': Timestamp.now(),
       });
     }
-
     await batch.commit();
   }
 }

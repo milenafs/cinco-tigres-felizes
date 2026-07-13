@@ -1,18 +1,14 @@
-enum CategoriaVacina {
-  crianca,
-  adolescente,
-  adulto,
-  gestante,
-  idoso
-}
+enum CategoriaVacina { crianca, adolescente, adulto, gestante, idoso }
 
 class Vacina {
+  final String id;
   final String nome;
   final String descricao;
   final String doseTexto;
   final int quantidadeDeDoses;
 
   Vacina({
+    required this.id,
     required this.nome,
     required this.descricao,
     required this.doseTexto,
@@ -37,15 +33,15 @@ class CalendarioVacinas {
 
   List<Vacina> selecionarLista(CategoriaVacina categoria) {
     switch (categoria) {
-      case CategoriaVacina.adolescente: 
+      case CategoriaVacina.adolescente:
         return adolescentes;
-      case CategoriaVacina.adulto:      
+      case CategoriaVacina.adulto:
         return adultos;
-      case CategoriaVacina.gestante:    
+      case CategoriaVacina.gestante:
         return gestantes;
-      case CategoriaVacina.idoso:       
+      case CategoriaVacina.idoso:
         return idosos;
-      case CategoriaVacina.crianca:     
+      case CategoriaVacina.crianca:
         return criancas;
     }
   }

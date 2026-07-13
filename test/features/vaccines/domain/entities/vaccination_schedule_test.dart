@@ -5,12 +5,14 @@ void main() {
   group('Vacina', () {
     test('instancia com todos os campos obrigatórios', () {
       final vacina = Vacina(
+        id: 'test_id_bcg',
         nome: 'BCG',
         descricao: 'Previne tuberculose',
         doseTexto: 'Dose única',
         quantidadeDeDoses: 1,
       );
 
+      expect(vacina.id, 'test_id_bcg');
       expect(vacina.nome, 'BCG');
       expect(vacina.descricao, 'Previne tuberculose');
       expect(vacina.doseTexto, 'Dose única');
@@ -24,21 +26,63 @@ void main() {
     setUp(() {
       calendario = CalendarioVacinas(
         criancas: [
-          Vacina(nome: 'BCG', descricao: '', doseTexto: 'Dose única', quantidadeDeDoses: 1),
-          Vacina(nome: 'VIP', descricao: '', doseTexto: '3 doses', quantidadeDeDoses: 3),
+          Vacina(
+            id: 'crianca_bcg',
+            nome: 'BCG',
+            descricao: '',
+            doseTexto: 'Dose única',
+            quantidadeDeDoses: 1,
+          ),
+          Vacina(
+            id: 'crianca_vip',
+            nome: 'VIP',
+            descricao: '',
+            doseTexto: '3 doses',
+            quantidadeDeDoses: 3,
+          ),
         ],
         adolescentes: [
-          Vacina(nome: 'HPV', descricao: '', doseTexto: '2 doses', quantidadeDeDoses: 2),
+          Vacina(
+            id: 'adolescente_hpv',
+            nome: 'HPV',
+            descricao: '',
+            doseTexto: '2 doses',
+            quantidadeDeDoses: 2,
+          ),
         ],
         adultos: [
-          Vacina(nome: 'Dupla adulto', descricao: '', doseTexto: 'Reforço a cada 10 anos', quantidadeDeDoses: 10),
+          Vacina(
+            id: 'adulto_dupla',
+            nome: 'Dupla adulto',
+            descricao: '',
+            doseTexto: 'Reforço a cada 10 anos',
+            quantidadeDeDoses: 10,
+          ),
         ],
         gestantes: [
-          Vacina(nome: 'Hepatite B', descricao: '', doseTexto: '3 doses', quantidadeDeDoses: 3),
-          Vacina(nome: 'dTPa', descricao: '', doseTexto: '1 dose por gestação', quantidadeDeDoses: 1),
+          Vacina(
+            id: 'gestante_hep_b',
+            nome: 'Hepatite B',
+            descricao: '',
+            doseTexto: '3 doses',
+            quantidadeDeDoses: 3,
+          ),
+          Vacina(
+            id: 'gestante_dtpa',
+            nome: 'dTPa',
+            descricao: '',
+            doseTexto: '1 dose por gestação',
+            quantidadeDeDoses: 1,
+          ),
         ],
         idosos: [
-          Vacina(nome: 'Pneumocócica 23V', descricao: '', doseTexto: '1 dose', quantidadeDeDoses: 1),
+          Vacina(
+            id: 'idoso_pneumo',
+            nome: 'Pneumocócica 23V',
+            descricao: '',
+            doseTexto: '1 dose',
+            quantidadeDeDoses: 1,
+          ),
         ],
       );
     });

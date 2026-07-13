@@ -61,10 +61,7 @@ class CartaoHabito extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     habito.frequenciaTexto,
-                    style: TextStyle(
-                      color: Colors.grey.shade700,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
                   ),
                   const SizedBox(height: 12),
                   _buildHistoricoSection(periodos),
@@ -86,12 +83,17 @@ class CartaoHabito extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(titulo, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+        Text(
+          titulo,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+        ),
         const SizedBox(height: 8),
         Wrap(
           spacing: 6,
           runSpacing: 6,
-          children: periodos.map((periodo) => _buildPeriodoWidget(periodo)).toList(),
+          children: periodos
+              .map((periodo) => _buildPeriodoWidget(periodo))
+              .toList(),
         ),
       ],
     );
@@ -110,10 +112,7 @@ class CartaoHabito extends StatelessWidget {
           decoration: BoxDecoration(
             color: _cor(percentual),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: _corBorda(percentual),
-              width: 2,
-            ),
+            border: Border.all(color: _corBorda(percentual), width: 2),
           ),
           child: Center(
             child: Text(
@@ -134,7 +133,11 @@ class CartaoHabito extends StatelessWidget {
   Color _cor(double percentual) {
     if (percentual == 0) return Colors.grey.shade200;
     if (percentual < 1.0) {
-      return Color.lerp(const Color.fromARGB(255, 230, 154, 78), const Color.fromARGB(255, 191, 255, 88), percentual)!;
+      return Color.lerp(
+        const Color.fromARGB(255, 230, 154, 78),
+        const Color.fromARGB(255, 191, 255, 88),
+        percentual,
+      )!;
     }
     return Colors.green;
   }
@@ -142,13 +145,19 @@ class CartaoHabito extends StatelessWidget {
   Color _corBorda(double percentual) {
     if (percentual == 0) return Colors.grey.shade400;
     if (percentual < 1.0) {
-      return Color.lerp(const Color.fromARGB(255, 230, 154, 78), const Color.fromARGB(255, 191, 255, 88), percentual)!;
+      return Color.lerp(
+        const Color.fromARGB(255, 230, 154, 78),
+        const Color.fromARGB(255, 191, 255, 88),
+        percentual,
+      )!;
     }
     return Colors.green.shade700;
   }
 
   Widget _buildTodaySection(int contagemHoje) {
-    final total = habito.tipo == TipoFrequenciaHabito.vezesPorDia ? habito.vezesPorDia : 1;
+    final total = habito.tipo == TipoFrequenciaHabito.vezesPorDia
+        ? habito.vezesPorDia
+        : 1;
     final percentual = total == 0 ? 0.0 : (contagemHoje / total).clamp(0, 1);
 
     return Column(
@@ -166,9 +175,7 @@ class CartaoHabito extends StatelessWidget {
                 width: 2,
               ),
             ),
-            child: Center(
-              child: _buildHojeContent(contagemHoje, total),
-            ),
+            child: Center(child: _buildHojeContent(contagemHoje, total)),
           ),
         ),
         const SizedBox(height: 8),
