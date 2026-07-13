@@ -56,6 +56,7 @@ class HabitoService {
       tipo: _tipoFromValue(data['tipo']),
       vezesPorDia: data['vezesPorDia'] is int ? data['vezesPorDia'] as int : 1,
       historico: historico,
+      maxStreak: data['maxStreak'] is int ? data['maxStreak'] as int : 0,
     );
   }
 
@@ -128,13 +129,22 @@ class HabitoService {
 
     if (countAtualizado == null || countAtualizado == 0) {
       await historyDoc.delete();
-      return;
+    } else {
+      await historyDoc.set({
+        'completedCount': countAtualizado,
+        'updatedAt': Timestamp.now(),
+      });
     }
 
-    await historyDoc.set({
-      'completedCount': countAtualizado,
-      'updatedAt': Timestamp.now(),
-    });
+    // Calcular streak e atualizar maxStreak se necessário
+    final streakAtual = atualizado.calcularStreak();
+    final maxStreakAtual = habitData['maxStreak'] as int? ?? 0;
+    if (streakAtual > maxStreakAtual) {
+      await docRef.update({
+        'maxStreak': streakAtual,
+        'updatedAt': Timestamp.now(),
+      });
+    }
   }
 
   Future<void> atualizarHabito(HabitoModel habitoAtualizado) async {

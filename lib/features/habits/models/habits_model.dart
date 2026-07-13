@@ -15,6 +15,7 @@ class HabitoModel {
   final TipoFrequenciaHabito tipo;
   final int vezesPorDia;
   final Map<String, int> historico;
+  final int maxStreak;
 
   HabitoModel({
     required this.id,
@@ -22,6 +23,7 @@ class HabitoModel {
     required this.tipo,
     this.vezesPorDia = 1,
     this.historico = const {},
+    this.maxStreak = 0,
   });
 
   factory HabitoModel.fromJson(Map<String, dynamic> json) {
@@ -50,6 +52,7 @@ class HabitoModel {
           .values[tipoIndex.clamp(0, TipoFrequenciaHabito.values.length - 1)],
       vezesPorDia: json['vezesPorDia'] is int ? json['vezesPorDia'] as int : 1,
       historico: novoHistorico,
+      maxStreak: json['maxStreak'] is int ? json['maxStreak'] as int : 0,
     );
   }
 
@@ -60,6 +63,7 @@ class HabitoModel {
       'tipo': tipo.index,
       'vezesPorDia': vezesPorDia,
       'historico': historico,
+      'maxStreak': maxStreak,
     };
   }
 
@@ -69,6 +73,7 @@ class HabitoModel {
     TipoFrequenciaHabito? tipo,
     int? vezesPorDia,
     Map<String, int>? historico,
+    int? maxStreak,
   }) {
     return HabitoModel(
       id: id ?? this.id,
@@ -76,6 +81,7 @@ class HabitoModel {
       tipo: tipo ?? this.tipo,
       vezesPorDia: vezesPorDia ?? this.vezesPorDia,
       historico: historico ?? Map<String, int>.from(this.historico),
+      maxStreak: maxStreak ?? this.maxStreak,
     );
   }
 
@@ -84,7 +90,42 @@ class HabitoModel {
   }
 
   bool estaConcluidoEm(DateTime data) {
-    return obterContagem(data) > 0;
+    final contagem = obterContagem(data);
+    if (tipo == TipoFrequenciaHabito.vezesPorDia) {
+      return contagem >= vezesPorDia;
+    }
+    return contagem > 0;
+  }
+
+  int calcularStreak() {
+    final hoje = DateTime.now();
+    final hojeNormalizado = DateTime(hoje.year, hoje.month, hoje.day);
+
+    if (!estaConcluidoEm(hojeNormalizado)) return 0;
+
+    int streak = 1;
+    var data = hojeNormalizado.subtract(const Duration(days: 1));
+
+    while (estaConcluidoEm(data)) {
+      streak++;
+      data = data.subtract(const Duration(days: 1));
+    }
+
+    return streak;
+  }
+
+  bool estaNaStreakAtual(DateTime data) {
+    final streak = calcularStreak();
+    if (streak == 0) return false;
+
+    final hoje = DateTime.now();
+    final hojeNormalizado = DateTime(hoje.year, hoje.month, hoje.day);
+    final dataNormalizada = DateTime(data.year, data.month, data.day);
+    final inicioStreak = hojeNormalizado.subtract(Duration(days: streak - 1));
+
+    return !dataNormalizada.isBefore(inicioStreak) &&
+        !dataNormalizada.isAfter(hojeNormalizado) &&
+        estaConcluidoEm(dataNormalizada);
   }
 
   HabitoModel alternarConclusao(DateTime data) {
