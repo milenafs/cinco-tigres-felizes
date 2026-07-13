@@ -3,16 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:cinco_tigres_felizes/features/vaccines/presentation/pages/vaccine_page.dart';
 import 'package:cinco_tigres_felizes/features/habits/presentation/pages/hydration_page.dart';
 import 'package:cinco_tigres_felizes/features/habits/presentation/pages/habits_page.dart';
-import 'package:cinco_tigres_felizes/features/habits/services/habits_service.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key, FirebaseAuth? auth, this.habitoService})
+  HomeScreen({super.key, FirebaseAuth? auth})
     : _auth = auth ?? FirebaseAuth.instance;
 
   final FirebaseAuth _auth;
-  final HabitoService? habitoService;
   @override
   Widget build(BuildContext context) {
     final user = _auth.currentUser;
@@ -68,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => HabitosScreen(service: habitoService),
+                    builder: (_) => const HabitosScreen(),
                   ),
                 );
               },

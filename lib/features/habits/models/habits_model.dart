@@ -62,7 +62,18 @@ class HabitoModel {
       'nome': nome,
       'tipo': tipo.index,
       'vezesPorDia': vezesPorDia,
-      'historico': historico,
+      'history': historico,
+      'maxStreak': maxStreak,
+    };
+  }
+
+  Map<String, dynamic> toFirestoreDoc() {
+    return {
+      'id': id,
+      'nome': nome,
+      'tipo': tipo.index,
+      'vezesPorDia': vezesPorDia,
+      'history': historico,
       'maxStreak': maxStreak,
     };
   }

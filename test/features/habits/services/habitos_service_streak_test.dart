@@ -19,16 +19,13 @@ Future<void> _adicionarHistorico(
   String habitoId,
   Map<String, int> historico,
 ) async {
-  for (final entry in historico.entries) {
-    await firestore
-        .collection('users')
-        .doc(userId)
-        .collection('habits')
-        .doc(habitoId)
-        .collection('history')
-        .doc(entry.key)
-        .set({'completedCount': entry.value, 'updatedAt': Timestamp.now()});
-  }
+  // Atualiza o campo 'history' inline no documento do hábito
+  await firestore
+      .collection('users')
+      .doc(userId)
+      .collection('habits')
+      .doc(habitoId)
+      .update({'history': historico});
 }
 
 void main() {

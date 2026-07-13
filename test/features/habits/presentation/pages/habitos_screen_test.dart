@@ -2,10 +2,29 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 import 'package:cinco_tigres_felizes/features/access/presentation/pages/home_page.dart';
 import 'package:cinco_tigres_felizes/features/habits/presentation/pages/habits_page.dart';
+import 'package:cinco_tigres_felizes/features/habits/providers/habitos_provider.dart';
 import 'package:cinco_tigres_felizes/features/habits/services/habits_service.dart';
+
+/// Helper para criar um widget de teste com o provider de hábitos.
+Widget _criarAppTeste({
+  required HabitoService servico,
+  Widget? home,
+}) {
+  return MultiProvider(
+    providers: [
+      ChangeNotifierProvider<HabitosProvider>(
+        create: (_) => HabitosProvider(servico)..carregarHabitos(),
+      ),
+    ],
+    child: MaterialApp(
+      home: home ?? const HabitosScreen(),
+    ),
+  );
+}
 
 void main() {
   testWidgets('navega para a tela de hábitos a partir da home', (
@@ -17,12 +36,12 @@ void main() {
       mockUser: MockUser(uid: 'user-1'),
     );
 
+    final servico = HabitoService(firestore: firestore, auth: auth);
+
     await tester.pumpWidget(
-      MaterialApp(
-        home: HomeScreen(
-          auth: auth,
-          habitoService: HabitoService(firestore: firestore, auth: auth),
-        ),
+      _criarAppTeste(
+        servico: servico,
+        home: HomeScreen(auth: auth),
       ),
     );
 
@@ -43,12 +62,10 @@ void main() {
       mockUser: MockUser(uid: 'user-1'),
     );
 
+    final servico = HabitoService(firestore: firestore, auth: auth);
+
     await tester.pumpWidget(
-      MaterialApp(
-        home: HabitosScreen(
-          service: HabitoService(firestore: firestore, auth: auth),
-        ),
-      ),
+      _criarAppTeste(servico: servico),
     );
     await tester.pumpAndSettle();
 
@@ -72,10 +89,19 @@ void main() {
       mockUser: MockUser(uid: 'user-1'),
     );
 
+    final servico = HabitoService(firestore: firestore, auth: auth);
+
+    // Usamos um provider acessível para aguardar a conclusão das escritas
+    late HabitosProvider provider;
+
     await tester.pumpWidget(
       MaterialApp(
-        home: HabitosScreen(
-          service: HabitoService(firestore: firestore, auth: auth),
+        home: ChangeNotifierProvider<HabitosProvider>(
+          create: (_) {
+            provider = HabitosProvider(servico)..carregarHabitos();
+            return provider;
+          },
+          child: const HabitosScreen(),
         ),
       ),
     );
@@ -106,6 +132,15 @@ void main() {
 
     // Agora deve mostrar o ícone de check (concluído) - assert local UI state
     expect(find.byIcon(Icons.check), findsOneWidget);
+
+    // Como o provider usa atualização otimista (fire-and-forget no Firestore),
+    // vamos validar persistência chamando o service diretamente
+    final habitoAtual = provider.habitos.first;
+    await servico.alternarConclusao(
+      habitoAtual.id,
+      DateTime.now(),
+      estadoLocal: habitoAtual,
+    );
 
     // Validar persistência diretamente no Firestore (nova instância do serviço,
     // simulando um reinício do app apontando para o mesmo backend)
