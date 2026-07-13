@@ -4,6 +4,8 @@ import '../../providers/gamification_provider.dart';
 import 'package:intl/intl.dart';
 
 class GaleriaConquistasPage extends StatelessWidget {
+  const GaleriaConquistasPage({super.key});
+  
   @override
   Widget build(BuildContext context) {
     final gamification = Provider.of<GamificationProvider>(context);
