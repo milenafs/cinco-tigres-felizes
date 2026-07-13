@@ -125,6 +125,7 @@ class HabitosScreen extends StatelessWidget {
     BuildContext context,
     HabitoModel habito,
   ) async {
+    final provider = context.read<HabitosProvider>();
     final confirmado = await showDialog<bool>(
       context: context,
       builder: (context) {
@@ -146,7 +147,7 @@ class HabitosScreen extends StatelessWidget {
     );
 
     if (confirmado == true) {
-      await context.read<HabitosProvider>().removerHabito(habito.id);
+      await provider.removerHabito(habito.id);
     }
   }
 }

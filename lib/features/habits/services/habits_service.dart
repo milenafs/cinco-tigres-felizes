@@ -34,7 +34,7 @@ class HabitoService {
   }
 
   /// Cria um [HabitoModel] a partir de um documento do Firestore,
-  /// extraindo o history inline do campo 'history' (Map<String, int>).
+  /// extraindo o history inline do campo 'history' (Map de String para int).
   HabitoModel _habitoFromDoc(
     DocumentSnapshot<Map<String, dynamic>> doc,
   ) {
