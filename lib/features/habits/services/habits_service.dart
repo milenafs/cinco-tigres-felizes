@@ -4,8 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../models/habits_model.dart';
 
 class HabitoService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  HabitoService({FirebaseFirestore? firestore, FirebaseAuth? auth})
+    : _firestore = firestore ?? FirebaseFirestore.instance,
+      _firebaseAuth = auth ?? FirebaseAuth.instance;
+
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _firebaseAuth;
 
   String get _uid {
     final user = _firebaseAuth.currentUser;

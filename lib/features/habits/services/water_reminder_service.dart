@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 import '../models/water_reminder_model.dart';
 
 class WaterReminderService extends ChangeNotifier {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _firebaseAuth;
 
   LembreteAguaModel? _lembrete;
   bool _carregado = false;
 
-  WaterReminderService() {
+  WaterReminderService({FirebaseFirestore? firestore, FirebaseAuth? auth})
+    : _firestore = firestore ?? FirebaseFirestore.instance,
+      _firebaseAuth = auth ?? FirebaseAuth.instance {
     carregarLembrete();
   }
 
@@ -44,10 +46,6 @@ class WaterReminderService extends ChangeNotifier {
       }
     } else {
       _lembrete = null;
-      await _settingsRef.set({
-        ..._lembrete!.toJson(),
-        'updatedAt': Timestamp.now(),
-      });
     }
 
     _carregado = true;

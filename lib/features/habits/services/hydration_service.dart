@@ -5,15 +5,17 @@ import 'package:flutter/material.dart';
 import '../models/hydration_model.dart';
 
 class HidratacaoService extends ChangeNotifier {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _firebaseAuth;
 
   int _consumoAtual = 0;
   int _metaDiaria = 2000;
 
   bool _carregado = false;
 
-  HidratacaoService() {
+  HidratacaoService({FirebaseFirestore? firestore, FirebaseAuth? auth})
+    : _firestore = firestore ?? FirebaseFirestore.instance,
+      _firebaseAuth = auth ?? FirebaseAuth.instance {
     _inicializar();
   }
 
