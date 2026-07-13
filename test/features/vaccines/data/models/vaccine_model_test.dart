@@ -35,6 +35,50 @@ void main() {
     });
   });
 
+  group('VacinaModel - Quantidade de Doses (Análise de Valor Limite)', () {
+    /*
+     * TÉCNICA APLICADA: Análise de Valor Limite (Avaliação A5)
+     * Variável: quantidade_doses
+     * Limites identificados para o parser numérico: 
+     * - 0 (Limite inferior absoluto - Trata casos excepcionais/inválidos na conversão do dado)
+     * - 1 (Limite inferior funcional válido - Cenário de dose única)
+     * - 2 (Valor marginal imediatamente superior)
+     */
+
+    test('Valor Limite: 0 doses (Mínimo absoluto)', () {
+      final json = {
+        'nome': 'X',
+        'descricao': 'X',
+        'dose_texto': 'X',
+        'quantidade_doses': 0,
+      };
+      final model = VacinaModel.fromJson(json, 'id_zero');
+      expect(model.quantidadeDeDoses, 0);
+    });
+
+    test('Valor Limite: 1 dose (Mínimo funcional válido)', () {
+      final json = {
+        'nome': 'X',
+        'descricao': 'X',
+        'dose_texto': 'X',
+        'quantidade_doses': 1,
+      };
+      final model = VacinaModel.fromJson(json, 'id_um');
+      expect(model.quantidadeDeDoses, 1);
+    });
+
+    test('Valor Limite: 2 doses (Margem acima do limite)', () {
+      final json = {
+        'nome': 'X',
+        'descricao': 'X',
+        'dose_texto': 'X',
+        'quantidade_doses': 2,
+      };
+      final model = VacinaModel.fromJson(json, 'id_dois');
+      expect(model.quantidadeDeDoses, 2);
+    });
+  });
+
   group('CalendarioVacinasModel', () {
     test('fromJson parseia todos os grupos corretamente', () {
       final json = {
