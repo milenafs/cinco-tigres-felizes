@@ -1,9 +1,6 @@
 import 'dart:convert';
 
-enum TipoFrequenciaHabito {
-  diario,
-  vezesPorDia,
-}
+enum TipoFrequenciaHabito { diario, vezesPorDia }
 
 const Map<TipoFrequenciaHabito, String> _rotulosFrequencia = {
   TipoFrequenciaHabito.diario: 'Diário',
@@ -45,9 +42,12 @@ class HabitoModel {
     }
 
     return HabitoModel(
-      id: json['id'] as String? ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      id:
+          json['id'] as String? ??
+          DateTime.now().millisecondsSinceEpoch.toString(),
       nome: json['nome'] as String? ?? '',
-      tipo: TipoFrequenciaHabito.values[tipoIndex.clamp(0, TipoFrequenciaHabito.values.length - 1)],
+      tipo: TipoFrequenciaHabito
+          .values[tipoIndex.clamp(0, TipoFrequenciaHabito.values.length - 1)],
       vezesPorDia: json['vezesPorDia'] is int ? json['vezesPorDia'] as int : 1,
       historico: novoHistorico,
     );
@@ -121,7 +121,11 @@ class HabitoModel {
     final periodos = <PeriodoHistorico>[];
 
     for (int i = 6; i >= 0; i--) {
-      final data = DateTime(hoje.year, hoje.month, hoje.day).subtract(Duration(days: i));
+      final data = DateTime(
+        hoje.year,
+        hoje.month,
+        hoje.day,
+      ).subtract(Duration(days: i));
       final contagem = obterContagem(data);
       periodos.add(
         PeriodoHistorico(

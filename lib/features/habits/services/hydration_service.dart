@@ -90,10 +90,7 @@ class HidratacaoService extends ChangeNotifier {
         _consumoAtual = data['consumoAtual'] ?? 0;
       }
     } else {
-      await hoje.set({
-        'consumoAtual': 0,
-        'updatedAt': Timestamp.now(),
-      });
+      await hoje.set({'consumoAtual': 0, 'updatedAt': Timestamp.now()});
     }
 
     _carregado = true;
@@ -106,20 +103,17 @@ class HidratacaoService extends ChangeNotifier {
     await _carregarDados();
   }
 
-  HidratacaoModel get model => HidratacaoModel(
-        metaDiaria: _metaDiaria,
-        consumoAtual: _consumoAtual,
-      );
+  HidratacaoModel get model =>
+      HidratacaoModel(metaDiaria: _metaDiaria, consumoAtual: _consumoAtual);
 
   Future<void> adicionarAgua(int quantidade) async {
     await _garantirCarregado();
 
     _consumoAtual += quantidade;
 
-    await _logRef(DateTime.now()).set({
-      'consumoAtual': _consumoAtual,
-      'updatedAt': Timestamp.now(),
-    });
+    await _logRef(
+      DateTime.now(),
+    ).set({'consumoAtual': _consumoAtual, 'updatedAt': Timestamp.now()});
 
     notifyListeners();
   }
@@ -144,10 +138,9 @@ class HidratacaoService extends ChangeNotifier {
 
     _consumoAtual = 0;
 
-    await _logRef(DateTime.now()).set({
-      'consumoAtual': 0,
-      'updatedAt': Timestamp.now(),
-    });
+    await _logRef(
+      DateTime.now(),
+    ).set({'consumoAtual': 0, 'updatedAt': Timestamp.now()});
 
     notifyListeners();
   }

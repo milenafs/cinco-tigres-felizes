@@ -38,49 +38,57 @@ void main() {
       expect(find.text('Meu Progresso:'), findsOneWidget);
     });
 
-    testWidgets('exibe um botão de dose para vacina com dose única', (tester) async {
+    testWidgets('exibe um botão de dose para vacina com dose única', (
+      tester,
+    ) async {
       await tester.pumpWidget(buildCard(statusDoses: [false]));
 
       expect(find.byIcon(Icons.radio_button_unchecked), findsOneWidget);
     });
 
-    testWidgets('exibe três botões de dose para vacina com 3 doses', (tester) async {
+    testWidgets('exibe três botões de dose para vacina com 3 doses', (
+      tester,
+    ) async {
       await tester.pumpWidget(buildCard(statusDoses: [false, false, false]));
 
       expect(find.byIcon(Icons.radio_button_unchecked), findsNWidgets(3));
     });
 
-    testWidgets('exibe selo "Vacinação Completa" quando isCompleta é true', (tester) async {
-      await tester.pumpWidget(buildCard(
-        statusDoses: [true],
-        isCompleta: true,
-      ));
+    testWidgets('exibe selo "Vacinação Completa" quando isCompleta é true', (
+      tester,
+    ) async {
+      await tester.pumpWidget(buildCard(statusDoses: [true], isCompleta: true));
 
       expect(find.text('Vacinação Completa'), findsOneWidget);
       expect(find.byIcon(Icons.verified), findsOneWidget);
     });
 
-    testWidgets('exibe selo "Em Andamento" quando isEmProgresso é true', (tester) async {
-      await tester.pumpWidget(buildCard(
-        statusDoses: [true, false, false],
-        isEmProgresso: true,
-      ));
+    testWidgets('exibe selo "Em Andamento" quando isEmProgresso é true', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildCard(statusDoses: [true, false, false], isEmProgresso: true),
+      );
 
       expect(find.text('Em Andamento'), findsOneWidget);
       expect(find.byIcon(Icons.timelapse), findsOneWidget);
     });
 
-    testWidgets('chama onDoseToggled ao tocar no botão de dose', (tester) async {
+    testWidgets('chama onDoseToggled ao tocar no botão de dose', (
+      tester,
+    ) async {
       int? indexChamado;
       bool? valorChamado;
 
-      await tester.pumpWidget(buildCard(
-        statusDoses: [false],
-        onDoseToggled: (index, isTomada) {
-          indexChamado = index;
-          valorChamado = isTomada;
-        },
-      ));
+      await tester.pumpWidget(
+        buildCard(
+          statusDoses: [false],
+          onDoseToggled: (index, isTomada) {
+            indexChamado = index;
+            valorChamado = isTomada;
+          },
+        ),
+      );
 
       await tester.tap(find.byIcon(Icons.radio_button_unchecked));
       await tester.pump();

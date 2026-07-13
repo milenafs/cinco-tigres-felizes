@@ -39,9 +39,7 @@ class _HabitosScreenState extends State<HabitosScreen> {
 
   Future<void> _abrirFormularioHabito() async {
     final novoHabito = await Navigator.of(context).push<HabitoModel>(
-      MaterialPageRoute(
-        builder: (_) => const FormularioHabitoScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const FormularioHabitoScreen()),
     );
     if (novoHabito != null) {
       await _servico.adicionarHabito(novoHabito);
@@ -58,9 +56,7 @@ class _HabitosScreenState extends State<HabitosScreen> {
 
   Future<void> _editarHabito(HabitoModel habito) async {
     final habitoAtualizado = await Navigator.of(context).push<HabitoModel>(
-      MaterialPageRoute(
-        builder: (_) => FormularioHabitoScreen(habito: habito),
-      ),
+      MaterialPageRoute(builder: (_) => FormularioHabitoScreen(habito: habito)),
     );
     if (habitoAtualizado != null) {
       await _servico.atualizarHabito(habitoAtualizado);
@@ -101,7 +97,7 @@ class _HabitosScreenState extends State<HabitosScreen> {
       appBar: AppBar(title: const Text('Hábitos')),
       body: _carregando
           ? const Center(child: CircularProgressIndicator())
-            : Padding(
+          : Padding(
               padding: const EdgeInsets.all(20),
               child: _habitos.isEmpty
                   ? Center(
@@ -121,14 +117,16 @@ class _HabitosScreenState extends State<HabitosScreen> {
                         ],
                       ),
                     )
-                    : ListView.separated(
+                  : ListView.separated(
                       itemCount: _habitos.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 12),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         final habito = _habitos[index];
                         return CartaoHabito(
                           habito: habito,
-                          aoAlternarData: (data) => _alternarConclusao(habito, data),
+                          aoAlternarData: (data) =>
+                              _alternarConclusao(habito, data),
                           aoEditar: () => _editarHabito(habito),
                           aoRemover: () => _removerHabito(habito),
                         );

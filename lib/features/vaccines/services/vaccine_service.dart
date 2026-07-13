@@ -21,23 +21,15 @@ class VacinasService extends ChangeNotifier {
   }
 
   List<bool> obterStatusDoses(Vacina vacina) {
-    final dosesSalvas = _dosesPorVacina[vacina.nome];
+    final dosesSalvas = _dosesPorVacina[vacina.id]; // Alterado para vacina.id
 
     if (dosesSalvas == null) {
-      _dosesPorVacina[vacina.nome] = List.filled(vacina.quantidadeDeDoses, false);
-    } 
-    else if (dosesSalvas.length != vacina.quantidadeDeDoses) {
-      List<bool> novaLista = List.filled(vacina.quantidadeDeDoses, false);
-      
-      for (int i = 0; i < novaLista.length && i < dosesSalvas.length; i++) {
-        novaLista[i] = dosesSalvas[i];
-      }
-      
-      _dosesPorVacina[vacina.nome] = novaLista;
+      _dosesPorVacina[vacina.id] = List.filled(vacina.quantidadeDeDoses, false);
     }
 
-    return _dosesPorVacina[vacina.nome]!;
+    return _dosesPorVacina[vacina.id]!;
   }
+
   bool isVacinaCompleta(Vacina vacina) =>
       obterStatusDoses(vacina).every((tomada) => tomada);
 
@@ -49,7 +41,7 @@ class VacinasService extends ChangeNotifier {
   void alternarDose(Vacina vacina, int indexDose, bool tomada) {
     final status = obterStatusDoses(vacina);
     status[indexDose] = tomada;
-    _dosesPorVacina[vacina.nome] = status;
+    _dosesPorVacina[vacina.id] = status; // Alterado para vacina.id
     _repository.salvarDoses(_dosesPorVacina);
     notifyListeners();
   }
@@ -67,7 +59,10 @@ class VacinasService extends ChangeNotifier {
     ];
 
     for (final vacina in todasAsVacinas) {
-      vacinasUnicas.putIfAbsent(vacina.nome, () => vacina);
+      vacinasUnicas.putIfAbsent(
+        vacina.id,
+        () => vacina,
+      ); // Alterado para vacina.id
     }
 
     return vacinasUnicas.values.toList();

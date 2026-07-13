@@ -12,7 +12,10 @@ void main() {
     WidgetTester tester,
   ) async {
     final firestore = FakeFirebaseFirestore();
-    final auth = MockFirebaseAuth(signedIn: true, mockUser: MockUser(uid: 'user-1'));
+    final auth = MockFirebaseAuth(
+      signedIn: true,
+      mockUser: MockUser(uid: 'user-1'),
+    );
 
     await tester.pumpWidget(
       MaterialApp(
@@ -35,7 +38,10 @@ void main() {
     WidgetTester tester,
   ) async {
     final firestore = FakeFirebaseFirestore();
-    final auth = MockFirebaseAuth(signedIn: true, mockUser: MockUser(uid: 'user-1'));
+    final auth = MockFirebaseAuth(
+      signedIn: true,
+      mockUser: MockUser(uid: 'user-1'),
+    );
 
     await tester.pumpWidget(
       MaterialApp(
@@ -61,7 +67,10 @@ void main() {
     WidgetTester tester,
   ) async {
     final firestore = FakeFirebaseFirestore();
-    final auth = MockFirebaseAuth(signedIn: true, mockUser: MockUser(uid: 'user-1'));
+    final auth = MockFirebaseAuth(
+      signedIn: true,
+      mockUser: MockUser(uid: 'user-1'),
+    );
 
     await tester.pumpWidget(
       MaterialApp(

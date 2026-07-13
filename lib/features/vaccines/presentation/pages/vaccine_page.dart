@@ -24,8 +24,9 @@ class _VacinacaoScreenState extends State<VacinacaoScreen> {
     }
 
     final listaFiltrada = service.calendario!.selecionarLista(_filtroAtual);
-    final vacinasPendentes =
-        listaFiltrada.where((v) => !service.isVacinaCompleta(v)).toList();
+    final vacinasPendentes = listaFiltrada
+        .where((v) => !service.isVacinaCompleta(v))
+        .toList();
     final vacinasConcluidas = service.obterVacinasConcluidas();
 
     return DefaultTabController(
@@ -59,7 +60,8 @@ class _VacinacaoScreenState extends State<VacinacaoScreen> {
             _ListaVacinas(
               vacinas: vacinasConcluidas,
               service: service,
-              mensagemVazia: 'Nenhuma vacina concluída ainda. Marque suas doses!',
+              mensagemVazia:
+                  'Nenhuma vacina concluída ainda. Marque suas doses!',
             ),
           ],
         ),
@@ -68,7 +70,8 @@ class _VacinacaoScreenState extends State<VacinacaoScreen> {
   }
 
   Future<void> _abrirFiltro(BuildContext context) async {
-    final resultado = await showModalBottomSheet<CategoriaVacina>( // Espera receber um Enum
+    final resultado = await showModalBottomSheet<CategoriaVacina>(
+      // Espera receber um Enum
       context: context,
       builder: (_) => FiltroModal(categoriaAtual: _filtroAtual),
     );

@@ -12,8 +12,8 @@ class FakeVacinasRepository implements IVacinasRepository {
   FakeVacinasRepository({
     CalendarioVacinas? calendario,
     Map<String, List<bool>>? doses,
-  })  : _calendario = calendario ?? _calendarioVazio(),
-        _doses = doses ?? {};
+  }) : _calendario = calendario ?? _calendarioVazio(),
+       _doses = doses ?? {};
 
   @override
   Future<CalendarioVacinas> carregarCalendario() async => _calendario;
@@ -27,20 +27,21 @@ class FakeVacinasRepository implements IVacinasRepository {
   }
 
   static CalendarioVacinas _calendarioVazio() => CalendarioVacinas(
-        criancas: [],
-        adolescentes: [],
-        adultos: [],
-        gestantes: [],
-        idosos: [],
-      );
+    criancas: [],
+    adolescentes: [],
+    adultos: [],
+    gestantes: [],
+    idosos: [],
+  );
 
   /// Helpers para montar vacinas e calendários de teste de forma concisa.
   static Vacina vacina(String nome, {int doses = 1}) => Vacina(
-        nome: nome,
-        descricao: 'Descrição de $nome',
-        doseTexto: '$doses dose(s)',
-        quantidadeDeDoses: doses,
-      );
+    id: 'fake_id_$nome',
+    nome: nome,
+    descricao: 'Descrição de $nome',
+    doseTexto: '$doses dose(s)',
+    quantidadeDeDoses: doses,
+  );
 
   static CalendarioVacinas calendario({
     List<Vacina> criancas = const [],
@@ -48,12 +49,11 @@ class FakeVacinasRepository implements IVacinasRepository {
     List<Vacina> adultos = const [],
     List<Vacina> gestantes = const [],
     List<Vacina> idosos = const [],
-  }) =>
-      CalendarioVacinas(
-        criancas: criancas,
-        adolescentes: adolescentes,
-        adultos: adultos,
-        gestantes: gestantes,
-        idosos: idosos,
-      );
+  }) => CalendarioVacinas(
+    criancas: criancas,
+    adolescentes: adolescentes,
+    adultos: adultos,
+    gestantes: gestantes,
+    idosos: idosos,
+  );
 }
