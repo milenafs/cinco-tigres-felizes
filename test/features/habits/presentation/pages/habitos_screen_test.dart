@@ -8,16 +8,31 @@ import 'package:cinco_tigres_felizes/features/access/presentation/pages/home_pag
 import 'package:cinco_tigres_felizes/features/habits/presentation/pages/habits_page.dart';
 import 'package:cinco_tigres_felizes/features/habits/providers/habitos_provider.dart';
 import 'package:cinco_tigres_felizes/features/habits/services/habits_service.dart';
+import 'package:cinco_tigres_felizes/features/gamification/models/badge_model.dart';
+import 'package:cinco_tigres_felizes/features/gamification/providers/gamification_provider.dart';
 
-/// Helper para criar um widget de teste com o provider de hábitos.
+class DummyGamificationProvider extends ChangeNotifier implements GamificationProvider {
+  @override
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
+  @override
+  List<BadgeModel> get badges => [];
+
+  @override
+  void avaliarConquistas(dynamic habito) {}
+}
+
 Widget _criarAppTeste({
   required HabitoService servico,
   Widget? home,
 }) {
   return MultiProvider(
     providers: [
+      ChangeNotifierProvider<GamificationProvider>(
+        create: (_) => DummyGamificationProvider(),
+      ),
       ChangeNotifierProvider<HabitosProvider>(
-        create: (_) => HabitosProvider(servico)..carregarHabitos(),
+        create: (_) => HabitosProvider(servico, DummyGamificationProvider())..carregarHabitos(),
       ),
     ],
     child: MaterialApp(
@@ -95,13 +110,20 @@ void main() {
     late HabitosProvider provider;
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: ChangeNotifierProvider<HabitosProvider>(
-          create: (_) {
-            provider = HabitosProvider(servico)..carregarHabitos();
-            return provider;
-          },
-          child: const HabitosScreen(),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<GamificationProvider>(
+            create: (_) => DummyGamificationProvider(),
+          ),
+          ChangeNotifierProvider<HabitosProvider>(
+            create: (_) {
+              provider = HabitosProvider(servico, DummyGamificationProvider())..carregarHabitos();
+              return provider;
+            },
+          ),
+        ],
+        child: const MaterialApp(
+          home: HabitosScreen(),
         ),
       ),
     );
