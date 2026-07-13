@@ -6,14 +6,16 @@ import '../widgets/habitos_card.dart';
 import 'habits_form_page.dart';
 
 class HabitosScreen extends StatefulWidget {
-  const HabitosScreen({super.key});
+  const HabitosScreen({super.key, this.service});
+
+  final HabitoService? service;
 
   @override
   State<HabitosScreen> createState() => _HabitosScreenState();
 }
 
 class _HabitosScreenState extends State<HabitosScreen> {
-  final HabitoService _servico = HabitoService();
+  late final HabitoService _servico = widget.service ?? HabitoService();
   final List<HabitoModel> _habitos = [];
   bool _carregando = true;
 

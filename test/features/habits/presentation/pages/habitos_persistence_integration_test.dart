@@ -1,45 +1,62 @@
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:cinco_tigres_felizes/main.dart';
+import 'package:cinco_tigres_felizes/features/habits/presentation/pages/habits_page.dart';
+import 'package:cinco_tigres_felizes/features/habits/services/habits_service.dart';
 
 void main() {
-  testWidgets('verifica SharedPreferences após marcar e reiniciar', (
+  testWidgets('verifica persistência no Firestore após marcar e reiniciar', (
     WidgetTester tester,
   ) async {
-    SharedPreferences.setMockInitialValues({});
+    final firestore = FakeFirebaseFirestore();
+    final auth = MockFirebaseAuth(signedIn: true, mockUser: MockUser(uid: 'user-1'));
 
-    await tester.pumpWidget(const MyApp());
-
-    await tester.tap(find.text('Hábitos'));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: HabitosScreen(
+          service: HabitoService(firestore: firestore, auth: auth),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
 
     await tester.tap(find.byIcon(Icons.add).first);
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextFormField).first, 'Exercício');
-    await tester.pumpAndSettle();
-
     await tester.tap(find.text('Salvar hábito'));
     await tester.pumpAndSettle();
 
+    expect(find.text('Exercício'), findsOneWidget);
+
     // marca hoje
-    await tester.tap(find.byIcon(Icons.add).last);
+    final cardDoHabito = find.ancestor(
+      of: find.text('Exercício'),
+      matching: find.byType(Card),
+    );
+    final addDentroDoCard = find.descendant(
+      of: cardDoHabito,
+      matching: find.byIcon(Icons.add),
+    );
+    await tester.tap(addDentroDoCard);
     await tester.pumpAndSettle();
 
-    final prefs = await SharedPreferences.getInstance();
-    final stored = prefs.getString('habitos_lista');
-    expect(stored, isNotNull);
-    expect(stored, contains('Exercício'));
+    expect(find.byIcon(Icons.check), findsOneWidget);
 
-    // reinicia app
-    await tester.pumpWidget(const MyApp());
+    // reinicia o app: nova instância do serviço apontando para o mesmo
+    // backend (fake) do Firestore, simulando persistência entre execuções.
+    await tester.pumpWidget(
+      MaterialApp(
+        home: HabitosScreen(
+          service: HabitoService(firestore: firestore, auth: auth),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
 
-    final prefs2 = await SharedPreferences.getInstance();
-    final stored2 = prefs2.getString('habitos_lista');
-    expect(stored2, isNotNull);
-    expect(stored2, contains('Exercício'));
+    expect(find.text('Exercício'), findsOneWidget);
+    expect(find.byIcon(Icons.check), findsOneWidget);
   });
 }
