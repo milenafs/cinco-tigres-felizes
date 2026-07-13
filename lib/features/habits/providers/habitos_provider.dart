@@ -3,12 +3,13 @@ import 'package:flutter/foundation.dart';
 import '../models/habits_model.dart';
 import '../services/habits_service.dart';
 
-/// Provider que gerencia o estado dos hábitos com cache local
-/// e atualizações otimistas para garantir uma UI fluida.
+import '../../gamification/providers/gamification_provider.dart';
+
 class HabitosProvider extends ChangeNotifier {
   final HabitoService _servico;
+  final GamificationProvider _gamification; 
 
-  HabitosProvider(this._servico);
+  HabitosProvider(this._servico, this._gamification);
 
   List<HabitoModel> _habitos = [];
   bool _carregando = true;
@@ -53,6 +54,9 @@ class HabitosProvider extends ChangeNotifier {
 
     // Notifica a UI imediatamente
     notifyListeners();
+
+    // 4. Chamamos a função de gamificação logo após a atualização otimista
+    _gamification.avaliarConquistas(_habitos[index]);
 
     try {
       // Persiste no Firestore em background

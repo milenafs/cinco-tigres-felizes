@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+
+// Importações originais
 import 'package:cinco_tigres_felizes/features/auth/presentation/pages/login_page.dart';
 import 'package:cinco_tigres_felizes/features/auth/providers/auth_provider.dart';
 import 'package:cinco_tigres_felizes/features/habits/providers/habitos_provider.dart';
@@ -10,6 +12,12 @@ import 'package:cinco_tigres_felizes/features/habits/services/hydration_service.
 import 'package:cinco_tigres_felizes/features/vaccines/data/repositories/vaccines_repository.dart';
 import 'package:cinco_tigres_felizes/features/vaccines/domain/repositories/i_vaccines_repository.dart';
 import 'package:cinco_tigres_felizes/features/vaccines/services/vaccine_service.dart';
+
+// Nova importação (ajuste o caminho conforme criou as pastas)
+import 'package:cinco_tigres_felizes/features/gamification/providers/gamification_provider.dart';
+
+// Chave global para podermos exibir SnackBars (notificações) sem precisar de um BuildContext
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,12 +30,23 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => HidratacaoService()),
 
-        // Provider de Hábitos com cache otimista
-        ChangeNotifierProvider<HabitosProvider>(
-          create: (_) => HabitosProvider(HabitoService())..carregarHabitos(),
+        // 1. Adicionamos o GamificationProvider ANTES do HabitosProvider
+        // Passamos a chave global para ele conseguir disparar os pop-ups
+        ChangeNotifierProvider(
+          create: (_) => GamificationProvider(scaffoldMessengerKey),
         ),
 
-        // Substituir o ChangeNotifierProvider antigo por estes dois:
+        // 2. Trocamos o ChangeNotifierProvider do HabitosProvider por um ChangeNotifierProxyProvider.
+        // Isso permite injetar o GamificationProvider dentro do HabitosProvider de forma segura.
+        ChangeNotifierProxyProvider<GamificationProvider, HabitosProvider>(
+          create: (context) => HabitosProvider(
+            HabitoService(),
+            context.read<GamificationProvider>(), // Injetando aqui
+          )..carregarHabitos(),
+          update: (context, gamification, previous) => 
+              previous ?? HabitosProvider(HabitoService(), gamification)..carregarHabitos(),
+        ),
+
         Provider<IVacinasRepository>(create: (_) => VacinasRepository()),
         ChangeNotifierProxyProvider<IVacinasRepository, VacinasService>(
           create: (ctx) => VacinasService(ctx.read<IVacinasRepository>()),
@@ -46,10 +65,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      scaffoldMessengerKey: scaffoldMessengerKey, // <-- Conectamos a chave global aqui!
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF00897B), // verde azulado
+          seedColor: const Color(0xFF00897B),
           brightness: Brightness.light,
         ),
         inputDecorationTheme: InputDecorationTheme(
