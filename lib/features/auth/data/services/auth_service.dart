@@ -92,9 +92,10 @@ class AuthService {
     );
   }
 
-  Future<void> signOut() {
-    return _firebaseAuth.signOut();
-  }
+Future<void> signOut() async {
+  await GoogleSignIn.instance.signOut();
+  await _firebaseAuth.signOut();
+}
 
   User? get currentUser => _firebaseAuth.currentUser;
 
