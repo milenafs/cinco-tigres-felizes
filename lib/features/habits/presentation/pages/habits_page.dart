@@ -1,70 +1,131 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/habits_model.dart';
-import '../../services/habits_service.dart';
+import '../../providers/habitos_provider.dart';
 import '../widgets/habitos_card.dart';
 import 'habits_form_page.dart';
 
-class HabitosScreen extends StatefulWidget {
-  const HabitosScreen({super.key, this.service});
-
-  final HabitoService? service;
+class HabitosScreen extends StatelessWidget {
+  const HabitosScreen({super.key});
 
   @override
-  State<HabitosScreen> createState() => _HabitosScreenState();
-}
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Hábitos')),
+      body: Consumer<HabitosProvider>(
+        builder: (context, provider, _) {
+          if (provider.carregando) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-class _HabitosScreenState extends State<HabitosScreen> {
-  late final HabitoService _servico = widget.service ?? HabitoService();
-  final List<HabitoModel> _habitos = [];
-  bool _carregando = true;
+          if (provider.erro != null) {
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    provider.erro!,
+                    style: const TextStyle(color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: () => provider.carregarHabitos(),
+                    child: const Text('Tentar novamente'),
+                  ),
+                ],
+              ),
+            );
+          }
 
-  @override
-  void initState() {
-    super.initState();
-    _carregarHabitos();
+          if (provider.habitos.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Nenhum hábito encontrado.',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton.icon(
+                    onPressed: () => _abrirFormularioHabito(context),
+                    icon: const Icon(Icons.add),
+                    label: const Text('Adicionar hábito'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: ListView.separated(
+              itemCount: provider.habitos.length,
+              separatorBuilder: (context, index) =>
+                  const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final habito = provider.habitos[index];
+                return CartaoHabito(
+                  habito: habito,
+                  aoAlternarData: (data) =>
+                      _alternarConclusao(context, habito, data),
+                  aoEditar: () => _editarHabito(context, habito),
+                  aoRemover: () => _removerHabito(context, habito),
+                );
+              },
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _abrirFormularioHabito(context),
+        tooltip: 'Adicionar hábito',
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 
-  Future<void> _carregarHabitos() async {
-    final lista = await _servico.carregarHabitos();
-    if (!mounted) {
-      return;
-    }
-    setState(() {
-      _habitos.clear();
-      _habitos.addAll(lista);
-      _carregando = false;
-    });
-  }
-
-  Future<void> _abrirFormularioHabito() async {
+  Future<void> _abrirFormularioHabito(BuildContext context) async {
+    final provider = context.read<HabitosProvider>();
     final novoHabito = await Navigator.of(context).push<HabitoModel>(
       MaterialPageRoute(builder: (_) => const FormularioHabitoScreen()),
     );
     if (novoHabito != null) {
-      await _servico.adicionarHabito(novoHabito);
-      setState(() {
-        _habitos.insert(0, novoHabito);
-      });
+      await provider.adicionarHabito(novoHabito);
     }
   }
 
-  Future<void> _alternarConclusao(HabitoModel habito, DateTime data) async {
-    await _servico.alternarConclusao(habito.id, data);
-    await _carregarHabitos();
+  void _alternarConclusao(
+    BuildContext context,
+    HabitoModel habito,
+    DateTime data,
+  ) {
+    // Atualização otimista: a UI reage imediatamente
+    context.read<HabitosProvider>().alternarConclusao(habito.id, data);
   }
 
-  Future<void> _editarHabito(HabitoModel habito) async {
+  Future<void> _editarHabito(
+    BuildContext context,
+    HabitoModel habito,
+  ) async {
+    final provider = context.read<HabitosProvider>();
     final habitoAtualizado = await Navigator.of(context).push<HabitoModel>(
-      MaterialPageRoute(builder: (_) => FormularioHabitoScreen(habito: habito)),
+      MaterialPageRoute(
+        builder: (_) => FormularioHabitoScreen(habito: habito),
+      ),
     );
     if (habitoAtualizado != null) {
-      await _servico.atualizarHabito(habitoAtualizado);
-      await _carregarHabitos();
+      await provider.atualizarHabito(habitoAtualizado);
     }
   }
 
-  Future<void> _removerHabito(HabitoModel habito) async {
+  Future<void> _removerHabito(
+    BuildContext context,
+    HabitoModel habito,
+  ) async {
+    final provider = context.read<HabitosProvider>();
     final confirmado = await showDialog<bool>(
       context: context,
       builder: (context) {
@@ -86,58 +147,7 @@ class _HabitosScreenState extends State<HabitosScreen> {
     );
 
     if (confirmado == true) {
-      await _servico.removerHabito(habito.id);
-      await _carregarHabitos();
+      await provider.removerHabito(habito.id);
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Hábitos')),
-      body: _carregando
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(20),
-              child: _habitos.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'Nenhum hábito encontrado.',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          const SizedBox(height: 12),
-                          ElevatedButton.icon(
-                            onPressed: _abrirFormularioHabito,
-                            icon: const Icon(Icons.add),
-                            label: const Text('Adicionar hábito'),
-                          ),
-                        ],
-                      ),
-                    )
-                  : ListView.separated(
-                      itemCount: _habitos.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 12),
-                      itemBuilder: (context, index) {
-                        final habito = _habitos[index];
-                        return CartaoHabito(
-                          habito: habito,
-                          aoAlternarData: (data) =>
-                              _alternarConclusao(habito, data),
-                          aoEditar: () => _editarHabito(habito),
-                          aoRemover: () => _removerHabito(habito),
-                        );
-                      },
-                    ),
-            ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _abrirFormularioHabito,
-        tooltip: 'Adicionar hábito',
-        child: const Icon(Icons.add),
-      ),
-    );
   }
 }

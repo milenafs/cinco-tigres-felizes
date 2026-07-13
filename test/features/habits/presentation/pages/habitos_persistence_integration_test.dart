@@ -2,9 +2,24 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 import 'package:cinco_tigres_felizes/features/habits/presentation/pages/habits_page.dart';
+import 'package:cinco_tigres_felizes/features/habits/providers/habitos_provider.dart';
 import 'package:cinco_tigres_felizes/features/habits/services/habits_service.dart';
+
+/// Helper para criar um widget de teste com o provider de hábitos.
+Widget _criarAppTeste({
+  required HabitoService servico,
+  Widget? home,
+}) {
+  return MaterialApp(
+    home: ChangeNotifierProvider<HabitosProvider>(
+      create: (_) => HabitosProvider(servico)..carregarHabitos(),
+      child: home ?? const HabitosScreen(),
+    ),
+  );
+}
 
 void main() {
   testWidgets('verifica persistência no Firestore após marcar e reiniciar', (
@@ -16,12 +31,10 @@ void main() {
       mockUser: MockUser(uid: 'user-1'),
     );
 
+    final servico = HabitoService(firestore: firestore, auth: auth);
+
     await tester.pumpWidget(
-      MaterialApp(
-        home: HabitosScreen(
-          service: HabitoService(firestore: firestore, auth: auth),
-        ),
-      ),
+      _criarAppTeste(servico: servico),
     );
     await tester.pumpAndSettle();
 
@@ -51,11 +64,7 @@ void main() {
     // reinicia o app: nova instância do serviço apontando para o mesmo
     // backend (fake) do Firestore, simulando persistência entre execuções.
     await tester.pumpWidget(
-      MaterialApp(
-        home: HabitosScreen(
-          service: HabitoService(firestore: firestore, auth: auth),
-        ),
-      ),
+      _criarAppTeste(servico: servico),
     );
     await tester.pumpAndSettle();
 

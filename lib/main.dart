@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:cinco_tigres_felizes/features/auth/presentation/pages/login_page.dart';
 import 'package:cinco_tigres_felizes/features/auth/providers/auth_provider.dart';
+import 'package:cinco_tigres_felizes/features/habits/providers/habitos_provider.dart';
+import 'package:cinco_tigres_felizes/features/habits/services/habits_service.dart';
 import 'package:cinco_tigres_felizes/features/habits/services/hydration_service.dart';
 import 'package:cinco_tigres_felizes/features/vaccines/data/repositories/vaccines_repository.dart';
 import 'package:cinco_tigres_felizes/features/vaccines/domain/repositories/i_vaccines_repository.dart';
@@ -19,6 +21,11 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => HidratacaoService()),
+
+        // Provider de Hábitos com cache otimista
+        ChangeNotifierProvider<HabitosProvider>(
+          create: (_) => HabitosProvider(HabitoService())..carregarHabitos(),
+        ),
 
         // Substituir o ChangeNotifierProvider antigo por estes dois:
         Provider<IVacinasRepository>(create: (_) => VacinasRepository()),
