@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/gamification_provider.dart';
+import '../../providers/achievements_provider.dart';
 import 'package:intl/intl.dart';
 
-class GaleriaConquistasPage extends StatelessWidget {
-  const GaleriaConquistasPage({super.key});
+class AchievementsGalleryPage extends StatelessWidget {
+  const AchievementsGalleryPage({super.key});
   
   @override
   Widget build(BuildContext context) {
-    final gamification = Provider.of<GamificationProvider>(context);
+    final gamification = Provider.of<AchievementsProvider>(context);
     
     return Scaffold(
       appBar: AppBar(title: const Text('Minhas Conquistas')),

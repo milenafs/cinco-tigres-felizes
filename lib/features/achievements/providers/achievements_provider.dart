@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../habits/models/habits_model.dart'; 
 import '../models/badge_model.dart';
-import '../services/gamification_service.dart';
+import '../services/achievements_service.dart';
 
-class GamificationProvider extends ChangeNotifier {
+class AchievementsProvider extends ChangeNotifier {
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
   final GamificationService _service;
 
   // Injeção do service para permitir testes
-  GamificationProvider(
+  AchievementsProvider(
     this.scaffoldMessengerKey, {
     GamificationService? service,
   }) : _service = service ?? GamificationService() {

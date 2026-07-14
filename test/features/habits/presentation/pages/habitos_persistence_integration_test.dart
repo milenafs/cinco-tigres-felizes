@@ -7,10 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:cinco_tigres_felizes/features/habits/presentation/pages/habits_page.dart';
 import 'package:cinco_tigres_felizes/features/habits/providers/habitos_provider.dart';
 import 'package:cinco_tigres_felizes/features/habits/services/habits_service.dart';
-import 'package:cinco_tigres_felizes/features/gamification/models/badge_model.dart';
-import 'package:cinco_tigres_felizes/features/gamification/providers/gamification_provider.dart';
+import 'package:cinco_tigres_felizes/features/achievements/models/badge_model.dart';
+import 'package:cinco_tigres_felizes/features/achievements/providers/achievements_provider.dart';
 
-class DummyGamificationProvider extends ChangeNotifier implements GamificationProvider {
+class DummyAchievementsProvider extends ChangeNotifier implements AchievementsProvider {
   @override
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
@@ -27,11 +27,11 @@ Widget _criarAppTeste({
 }) {
   return MultiProvider(
     providers: [
-      ChangeNotifierProvider<GamificationProvider>(
-        create: (_) => DummyGamificationProvider(),
+      ChangeNotifierProvider<AchievementsProvider>(
+        create: (_) => DummyAchievementsProvider(),
       ),
       ChangeNotifierProvider<HabitosProvider>(
-        create: (_) => HabitosProvider(servico, DummyGamificationProvider())..carregarHabitos(),
+        create: (_) => HabitosProvider(servico, DummyAchievementsProvider())..carregarHabitos(),
       ),
     ],
     child: MaterialApp(

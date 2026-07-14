@@ -14,7 +14,7 @@ import 'package:cinco_tigres_felizes/features/vaccines/domain/repositories/i_vac
 import 'package:cinco_tigres_felizes/features/vaccines/services/vaccine_service.dart';
 
 // Nova importação (ajuste o caminho conforme criou as pastas)
-import 'package:cinco_tigres_felizes/features/gamification/providers/gamification_provider.dart';
+import 'package:cinco_tigres_felizes/features/achievements/providers/achievements_provider.dart';
 
 // Chave global para podermos exibir SnackBars (notificações) sem precisar de um BuildContext
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -30,21 +30,21 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => HidratacaoService()),
 
-        // 1. Adicionamos o GamificationProvider ANTES do HabitosProvider
+        // 1. Adicionamos o AchievementsProvider ANTES do HabitosProvider
         // Passamos a chave global para ele conseguir disparar os pop-ups
         ChangeNotifierProvider(
-          create: (_) => GamificationProvider(scaffoldMessengerKey),
+          create: (_) => AchievementsProvider(scaffoldMessengerKey),
         ),
 
         // 2. Trocamos o ChangeNotifierProvider do HabitosProvider por um ChangeNotifierProxyProvider.
-        // Isso permite injetar o GamificationProvider dentro do HabitosProvider de forma segura.
-        ChangeNotifierProxyProvider<GamificationProvider, HabitosProvider>(
+        // Isso permite injetar o AchievementsProvider dentro do HabitosProvider de forma segura.
+        ChangeNotifierProxyProvider<AchievementsProvider, HabitosProvider>(
           create: (context) => HabitosProvider(
             HabitoService(),
-            context.read<GamificationProvider>(), // Injetando aqui
+            context.read<AchievementsProvider>(), // Injetando aqui
           )..carregarHabitos(),
-          update: (context, gamification, previous) => 
-              previous ?? HabitosProvider(HabitoService(), gamification)..carregarHabitos(),
+          update: (context, achievements, previous) => 
+              previous ?? HabitosProvider(HabitoService(), achievements)..carregarHabitos(),
         ),
 
         Provider<IVacinasRepository>(create: (_) => VacinasRepository()),

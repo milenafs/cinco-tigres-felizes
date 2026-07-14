@@ -1,8 +1,8 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cinco_tigres_felizes/features/gamification/models/badge_model.dart';
-import 'package:cinco_tigres_felizes/features/gamification/services/gamification_service.dart';
+import 'package:cinco_tigres_felizes/features/achievements/models/badge_model.dart';
+import 'package:cinco_tigres_felizes/features/achievements/services/achievements_service.dart';
 
 void main() {
   group('GamificationService', () {

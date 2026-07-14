@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cinco_tigres_felizes/features/habits/models/habits_model.dart';
-import 'package:cinco_tigres_felizes/features/gamification/providers/gamification_provider.dart';
-import 'package:cinco_tigres_felizes/features/gamification/services/gamification_service.dart';
+import 'package:cinco_tigres_felizes/features/achievements/providers/achievements_provider.dart';
+import 'package:cinco_tigres_felizes/features/achievements/services/achievements_service.dart';
 
 // Helper para criar hábito com um histórico específico para simular streak
 HabitoModel criarHabitoComStreak(int diasConsecutivos) {
@@ -44,7 +44,7 @@ void main() {
     });
 
     test('NÃO desbloqueia selo se a meta de dias não foi atingida', () async {
-      final provider = GamificationProvider(scaffoldKey, service: service);
+      final provider = AchievementsProvider(scaffoldKey, service: service);
       
       // Dá tempo para o provider terminar o _carregarDoBanco() inicial
       await Future.delayed(const Duration(milliseconds: 50)); 
@@ -62,7 +62,7 @@ void main() {
     });
 
     test('DESBLOQUEIA selo se a meta foi atingida', () async {
-      final provider = GamificationProvider(scaffoldKey, service: service);
+      final provider = AchievementsProvider(scaffoldKey, service: service);
       await Future.delayed(const Duration(milliseconds: 50)); 
 
       // Hábito com 3 dias de streak exatos
@@ -83,7 +83,7 @@ void main() {
         'desbloqueadoEm': Timestamp.fromDate(DateTime(2025, 1, 1)),
       });
 
-      final provider = GamificationProvider(scaffoldKey, service: service);
+      final provider = AchievementsProvider(scaffoldKey, service: service);
       
       await Future.delayed(const Duration(milliseconds: 50)); 
       

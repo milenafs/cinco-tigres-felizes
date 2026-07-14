@@ -6,7 +6,7 @@ import '../../providers/habitos_provider.dart';
 import '../widgets/habitos_card.dart';
 import 'habits_form_page.dart';
 
-import '../../../gamification/presentation/pages/gallery_page.dart'; 
+import '../../../achievements/presentation/pages/gallery_page.dart'; 
 
 class HabitosScreen extends StatelessWidget {
   const HabitosScreen({super.key});
@@ -25,7 +25,7 @@ class HabitosScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => GaleriaConquistasPage(),
+                  builder: (context) => AchievementsGalleryPage(),
                 ),
               );
             },

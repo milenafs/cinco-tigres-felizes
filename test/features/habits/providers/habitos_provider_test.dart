@@ -6,11 +6,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:cinco_tigres_felizes/features/habits/models/habits_model.dart';
 import 'package:cinco_tigres_felizes/features/habits/providers/habitos_provider.dart';
 import 'package:cinco_tigres_felizes/features/habits/services/habits_service.dart';
-import 'package:cinco_tigres_felizes/features/gamification/models/badge_model.dart';
-import 'package:cinco_tigres_felizes/features/gamification/providers/gamification_provider.dart';
+import 'package:cinco_tigres_felizes/features/achievements/models/badge_model.dart';
+import 'package:cinco_tigres_felizes/features/achievements/providers/achievements_provider.dart';
 
-/// Dummy Mock para isolar o GamificationProvider nos testes
-class DummyGamificationProvider extends ChangeNotifier implements GamificationProvider {
+/// Dummy Mock para isolar o AchievementsProvider nos testes
+class DummyAchievementsProvider extends ChangeNotifier implements AchievementsProvider {
   @override
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
@@ -45,7 +45,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico, DummyGamificationProvider());
+        final provider = HabitosProvider(servico, DummyAchievementsProvider());
 
         expect(provider.carregando, isTrue);
         expect(provider.habitos, isEmpty);
@@ -63,7 +63,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico, DummyGamificationProvider());
+        final provider = HabitosProvider(servico, DummyAchievementsProvider());
         expect(provider.carregando, isTrue);
 
         await provider.carregarHabitos();
@@ -83,7 +83,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico, DummyGamificationProvider())..carregarHabitos();
+        final provider = HabitosProvider(servico, DummyAchievementsProvider())..carregarHabitos();
 
         // Inicialmente está carregando
         expect(provider.carregando, isTrue);
@@ -106,7 +106,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico, DummyGamificationProvider());
+        final provider = HabitosProvider(servico, DummyAchievementsProvider());
         expect(provider.carregando, isTrue);
 
         await provider.carregarHabitos();
@@ -129,7 +129,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico, DummyGamificationProvider())..carregarHabitos();
+        final provider = HabitosProvider(servico, DummyAchievementsProvider())..carregarHabitos();
         await Future(() {});
 
         expect(provider.habitos, isEmpty);
@@ -153,7 +153,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico, DummyGamificationProvider())..carregarHabitos();
+        final provider = HabitosProvider(servico, DummyAchievementsProvider())..carregarHabitos();
         await Future(() {});
 
         await provider.adicionarHabito(
@@ -182,7 +182,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico, DummyGamificationProvider())..carregarHabitos();
+        final provider = HabitosProvider(servico, DummyAchievementsProvider())..carregarHabitos();
         await Future(() {});
 
         await provider.adicionarHabito(

@@ -3,13 +3,13 @@ import 'package:flutter/foundation.dart';
 import '../models/habits_model.dart';
 import '../services/habits_service.dart';
 
-import '../../gamification/providers/gamification_provider.dart';
+import '../../achievements/providers/achievements_provider.dart';
 
 class HabitosProvider extends ChangeNotifier {
   final HabitoService _servico;
-  final GamificationProvider _gamification; 
+  final AchievementsProvider _achievements;
 
-  HabitosProvider(this._servico, this._gamification);
+  HabitosProvider(this._servico, this._achievements);
 
   List<HabitoModel> _habitos = [];
   bool _carregando = true;
@@ -56,7 +56,7 @@ class HabitosProvider extends ChangeNotifier {
     notifyListeners();
 
     // 4. Chamamos a função de gamificação logo após a atualização otimista
-    _gamification.avaliarConquistas(_habitos[index]);
+    _achievements.avaliarConquistas(_habitos[index]);
 
     try {
       // Persiste no Firestore em background
