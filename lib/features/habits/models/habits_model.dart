@@ -112,9 +112,21 @@ class HabitoModel {
     final hoje = DateTime.now();
     final hojeNormalizado = DateTime(hoje.year, hoje.month, hoje.day);
 
-    if (!estaConcluidoEm(hojeNormalizado)) return 0;
+    // Se hoje está completo, streak inclui hoje
+    if (estaConcluidoEm(hojeNormalizado)) {
+      int streak = 1;
+      var data = hojeNormalizado.subtract(const Duration(days: 1));
 
-    int streak = 1;
+      while (estaConcluidoEm(data)) {
+        streak++;
+        data = data.subtract(const Duration(days: 1));
+      }
+
+      return streak;
+    }
+    
+    // Se hoje NÃO está completo, streak vai até ontem
+    int streak = 0;
     var data = hojeNormalizado.subtract(const Duration(days: 1));
 
     while (estaConcluidoEm(data)) {
@@ -132,7 +144,12 @@ class HabitoModel {
     final hoje = DateTime.now();
     final hojeNormalizado = DateTime(hoje.year, hoje.month, hoje.day);
     final dataNormalizada = DateTime(data.year, data.month, data.day);
-    final inicioStreak = hojeNormalizado.subtract(Duration(days: streak - 1));
+    
+    // Se hoje está completo, streak inclui hoje
+    // Se hoje não está completo, streak vai até ontem
+    final inicioStreak = estaConcluidoEm(hojeNormalizado)
+        ? hojeNormalizado.subtract(Duration(days: streak - 1))
+        : hojeNormalizado.subtract(Duration(days: streak));
 
     return !dataNormalizada.isBefore(inicioStreak) &&
         !dataNormalizada.isAfter(hojeNormalizado) &&
