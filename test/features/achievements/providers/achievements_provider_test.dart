@@ -79,7 +79,7 @@ void main() {
 
     test('NÃO desbloqueia selo que já está desbloqueado', () async {
       // Pré-populando o banco falso para simular que o usuário JÁ TEM o selo
-      await firestore.collection('usuarios').doc('user-1').collection('conquistas').doc('badge_3_dias').set({
+      await firestore.collection('users').doc('user-1').collection('conquistas').doc('badge_3_dias').set({
         'desbloqueadoEm': Timestamp.fromDate(DateTime(2025, 1, 1)),
       });
 

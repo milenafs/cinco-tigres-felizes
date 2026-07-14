@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/badge_model.dart';
 
@@ -20,7 +20,7 @@ class GamificationService {
     if (_userId == null) return {};
 
     final snapshot = await _db
-        .collection('usuarios')
+        .collection('users')
         .doc(_userId)
         .collection('conquistas')
         .get();
@@ -41,7 +41,7 @@ class GamificationService {
     if (_userId == null || badge.desbloqueadoEm == null) return;
 
     await _db
-        .collection('usuarios')
+        .collection('users')
         .doc(_userId)
         .collection('conquistas')
         .doc(badge.id)
