@@ -6,13 +6,33 @@ import '../../providers/habitos_provider.dart';
 import '../widgets/habitos_card.dart';
 import 'habits_form_page.dart';
 
+import '../../../achievements/presentation/pages/gallery_page.dart'; 
+
 class HabitosScreen extends StatelessWidget {
   const HabitosScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Hábitos')),
+      appBar: AppBar(
+        title: const Text('Hábitos'),
+        // 2. Adicionamos o botão de conquistas aqui
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.military_tech, color: Colors.amber, size: 28),
+            tooltip: 'Ver Conquistas',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AchievementsGalleryPage(),
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 8), // Um pequeno espaço para não colar na borda
+        ],
+      ),
       body: Consumer<HabitosProvider>(
         builder: (context, provider, _) {
           if (provider.carregando) {

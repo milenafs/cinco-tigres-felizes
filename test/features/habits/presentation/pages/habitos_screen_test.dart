@@ -8,16 +8,31 @@ import 'package:cinco_tigres_felizes/features/access/presentation/pages/home_pag
 import 'package:cinco_tigres_felizes/features/habits/presentation/pages/habits_page.dart';
 import 'package:cinco_tigres_felizes/features/habits/providers/habitos_provider.dart';
 import 'package:cinco_tigres_felizes/features/habits/services/habits_service.dart';
+import 'package:cinco_tigres_felizes/features/achievements/models/badge_model.dart';
+import 'package:cinco_tigres_felizes/features/achievements/providers/achievements_provider.dart';
 
-/// Helper para criar um widget de teste com o provider de hábitos.
+class DummyAchievementsProvider extends ChangeNotifier implements AchievementsProvider {
+  @override
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
+  @override
+  List<BadgeModel> get badges => [];
+
+  @override
+  void avaliarConquistas(dynamic habito) {}
+}
+
 Widget _criarAppTeste({
   required HabitoService servico,
   Widget? home,
 }) {
   return MultiProvider(
     providers: [
+      ChangeNotifierProvider<AchievementsProvider>(
+        create: (_) => DummyAchievementsProvider(),
+      ),
       ChangeNotifierProvider<HabitosProvider>(
-        create: (_) => HabitosProvider(servico)..carregarHabitos(),
+        create: (_) => HabitosProvider(servico, DummyAchievementsProvider())..carregarHabitos(),
       ),
     ],
     child: MaterialApp(
@@ -95,13 +110,20 @@ void main() {
     late HabitosProvider provider;
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: ChangeNotifierProvider<HabitosProvider>(
-          create: (_) {
-            provider = HabitosProvider(servico)..carregarHabitos();
-            return provider;
-          },
-          child: const HabitosScreen(),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<AchievementsProvider>(
+            create: (_) => DummyAchievementsProvider(),
+          ),
+          ChangeNotifierProvider<HabitosProvider>(
+            create: (_) {
+              provider = HabitosProvider(servico, DummyAchievementsProvider())..carregarHabitos();
+              return provider;
+            },
+          ),
+        ],
+        child: const MaterialApp(
+          home: HabitosScreen(),
         ),
       ),
     );

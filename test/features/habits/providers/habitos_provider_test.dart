@@ -1,10 +1,25 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cinco_tigres_felizes/features/habits/models/habits_model.dart';
 import 'package:cinco_tigres_felizes/features/habits/providers/habitos_provider.dart';
 import 'package:cinco_tigres_felizes/features/habits/services/habits_service.dart';
+import 'package:cinco_tigres_felizes/features/achievements/models/badge_model.dart';
+import 'package:cinco_tigres_felizes/features/achievements/providers/achievements_provider.dart';
+
+/// Dummy Mock para isolar o AchievementsProvider nos testes
+class DummyAchievementsProvider extends ChangeNotifier implements AchievementsProvider {
+  @override
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
+  @override
+  List<BadgeModel> get badges => [];
+
+  @override
+  void avaliarConquistas(HabitoModel habito) {}
+}
 
 /// Helper para criar um [HabitoModel] para testes.
 HabitoModel criarHabito({
@@ -30,7 +45,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico);
+        final provider = HabitosProvider(servico, DummyAchievementsProvider());
 
         expect(provider.carregando, isTrue);
         expect(provider.habitos, isEmpty);
@@ -48,7 +63,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico);
+        final provider = HabitosProvider(servico, DummyAchievementsProvider());
         expect(provider.carregando, isTrue);
 
         await provider.carregarHabitos();
@@ -68,8 +83,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        // Exatamente como em produção: cascade no create
-        final provider = HabitosProvider(servico)..carregarHabitos();
+        final provider = HabitosProvider(servico, DummyAchievementsProvider())..carregarHabitos();
 
         // Inicialmente está carregando
         expect(provider.carregando, isTrue);
@@ -88,11 +102,11 @@ void main() {
       () async {
         final firestore = FakeFirebaseFirestore();
         final auth = MockFirebaseAuth(
-          signedIn: false, // Não autenticado → erro
+          signedIn: false,
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico);
+        final provider = HabitosProvider(servico, DummyAchievementsProvider());
         expect(provider.carregando, isTrue);
 
         await provider.carregarHabitos();
@@ -115,7 +129,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico)..carregarHabitos();
+        final provider = HabitosProvider(servico, DummyAchievementsProvider())..carregarHabitos();
         await Future(() {});
 
         expect(provider.habitos, isEmpty);
@@ -139,7 +153,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico)..carregarHabitos();
+        final provider = HabitosProvider(servico, DummyAchievementsProvider())..carregarHabitos();
         await Future(() {});
 
         await provider.adicionarHabito(
@@ -168,7 +182,7 @@ void main() {
         );
         final servico = HabitoService(firestore: firestore, auth: auth);
 
-        final provider = HabitosProvider(servico)..carregarHabitos();
+        final provider = HabitosProvider(servico, DummyAchievementsProvider())..carregarHabitos();
         await Future(() {});
 
         await provider.adicionarHabito(
