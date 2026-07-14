@@ -5,11 +5,11 @@ import 'package:cinco_tigres_felizes/features/achievements/models/badge_model.da
 import 'package:cinco_tigres_felizes/features/achievements/services/achievements_service.dart';
 
 void main() {
-  group('GamificationService', () {
+  group('AchievementsService', () {
     test('carregarConquistasDesbloqueadas retorna mapa vazio se não houver conquistas', () async {
       final firestore = FakeFirebaseFirestore();
       final auth = MockFirebaseAuth(signedIn: true, mockUser: MockUser(uid: 'user-1'));
-      final service = GamificationService(firestore: firestore, auth: auth);
+      final service = AchievementsService(firestore: firestore, auth: auth);
 
       final conquistas = await service.carregarConquistasDesbloqueadas();
 
@@ -19,7 +19,7 @@ void main() {
     test('salvarConquista e carregarConquistasDesbloqueadas funcionam corretamente', () async {
       final firestore = FakeFirebaseFirestore();
       final auth = MockFirebaseAuth(signedIn: true, mockUser: MockUser(uid: 'user-1'));
-      final service = GamificationService(firestore: firestore, auth: auth);
+      final service = AchievementsService(firestore: firestore, auth: auth);
 
       final dataDesbloqueio = DateTime(2026, 10, 10);
       final badge = BadgeModel(

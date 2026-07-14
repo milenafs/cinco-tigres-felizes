@@ -8,7 +8,7 @@ class AchievementsGalleryPage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    final gamification = Provider.of<AchievementsProvider>(context);
+    final achievement = Provider.of<AchievementsProvider>(context);
     
     return Scaffold(
       appBar: AppBar(title: const Text('Minhas Conquistas')),
@@ -20,9 +20,9 @@ class AchievementsGalleryPage extends StatelessWidget {
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
         ),
-        itemCount: gamification.badges.length,
+        itemCount: achievement.badges.length,
         itemBuilder: (context, index) {
-          final badge = gamification.badges[index];
+          final badge = achievement.badges[index];
           
           return Card(
             color: badge.isDesbloqueado ? Colors.white : Colors.grey.shade200,

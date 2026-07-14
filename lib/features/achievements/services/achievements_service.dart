@@ -2,12 +2,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/badge_model.dart';
 
-class GamificationService {
+class AchievementsService {
   final FirebaseFirestore _db;
   final FirebaseAuth _auth;
 
   // Permite injetar mocks nos testes, mas usa a instância padrão em produção
-  GamificationService({
+  AchievementsService({
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
   })  : _db = firestore ?? FirebaseFirestore.instance,
@@ -22,7 +22,7 @@ class GamificationService {
     final snapshot = await _db
         .collection('users')
         .doc(_userId)
-        .collection('conquistas')
+        .collection('achievements')
         .get();
 
     final Map<String, DateTime> conquistas = {};
@@ -43,7 +43,7 @@ class GamificationService {
     await _db
         .collection('users')
         .doc(_userId)
-        .collection('conquistas')
+        .collection('achievements')
         .doc(badge.id)
         .set({
       'desbloqueadoEm': Timestamp.fromDate(badge.desbloqueadoEm!),

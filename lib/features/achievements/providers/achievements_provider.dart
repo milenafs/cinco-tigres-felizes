@@ -5,13 +5,13 @@ import '../services/achievements_service.dart';
 
 class AchievementsProvider extends ChangeNotifier {
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
-  final GamificationService _service;
+  final AchievementsService _service;
 
   // Injeção do service para permitir testes
   AchievementsProvider(
     this.scaffoldMessengerKey, {
-    GamificationService? service,
-  }) : _service = service ?? GamificationService() {
+    AchievementsService? service,
+  }) : _service = service ?? AchievementsService() {
     _carregarDoBanco(); 
   }
 

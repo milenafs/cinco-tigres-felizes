@@ -30,16 +30,16 @@ HabitoModel criarHabitoComStreak(int diasConsecutivos) {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('GamificationProvider - avaliarConquistas', () {
+  group('AchievementsProvider - avaliarConquistas', () {
     late FakeFirebaseFirestore firestore;
     late MockFirebaseAuth auth;
-    late GamificationService service;
+    late AchievementsService service;
     late GlobalKey<ScaffoldMessengerState> scaffoldKey;
     
     setUp(() {
       firestore = FakeFirebaseFirestore();
       auth = MockFirebaseAuth(signedIn: true, mockUser: MockUser(uid: 'user-1'));
-      service = GamificationService(firestore: firestore, auth: auth);
+      service = AchievementsService(firestore: firestore, auth: auth);
       scaffoldKey = GlobalKey<ScaffoldMessengerState>();
     });
 
@@ -79,7 +79,7 @@ void main() {
 
     test('NÃO desbloqueia selo que já está desbloqueado', () async {
       // Pré-populando o banco falso para simular que o usuário JÁ TEM o selo
-      await firestore.collection('users').doc('user-1').collection('conquistas').doc('badge_3_dias').set({
+      await firestore.collection('users').doc('user-1').collection('achievements').doc('badge_3_dias').set({
         'desbloqueadoEm': Timestamp.fromDate(DateTime(2025, 1, 1)),
       });
 
