@@ -168,7 +168,7 @@ void main() {
       expect(habito.calcularStreak(), equals(1));
     });
 
-    test('vezesPorDia incompleto hoje retorna 0 mesmo com dias anteriores', () {
+    test('vezesPorDia incompleto hoje retorna streak até ontem', () {
       final d = hoje();
       final historico = <String, int>{
         chave(d): 1, // apenas 1 de 3
@@ -183,7 +183,7 @@ void main() {
         historico: historico,
       );
 
-      expect(habito.calcularStreak(), equals(0));
+      expect(habito.calcularStreak(), equals(2));
     });
 
     test('streak longa com quebra no meio retorna até a quebra', () {
@@ -206,7 +206,7 @@ void main() {
       expect(habito.calcularStreak(), equals(4));
     });
 
-    test('hoje vazio com dias antigos completos retorna 0', () {
+    test('hoje vazio com dias antigos completos retorna streak até ontem', () {
       final d = hoje();
       final historico = <String, int>{
         chave(d.subtract(const Duration(days: 1))): 1,
@@ -220,7 +220,7 @@ void main() {
         historico: historico,
       );
 
-      expect(habito.calcularStreak(), equals(0));
+      expect(habito.calcularStreak(), equals(3));
     });
   });
 
@@ -328,6 +328,40 @@ void main() {
         ),
         isFalse,
       );
+    });
+
+    test('todos os dias da streak até ontem retornam true quando hoje incompleto', () {
+      final d = hoje();
+      // Streak de 5 dias até ontem (hoje não completo)
+      final historico = <String, int>{
+        chave(d.subtract(const Duration(days: 1))): 1, // ontem
+        chave(d.subtract(const Duration(days: 2))): 1,
+        chave(d.subtract(const Duration(days: 3))): 1,
+        chave(d.subtract(const Duration(days: 4))): 1,
+        chave(d.subtract(const Duration(days: 5))): 1,
+      };
+      final habito = HabitoModel(
+        id: '1',
+        nome: 'Teste',
+        tipo: TipoFrequenciaHabito.diario,
+        historico: historico,
+      );
+
+      // streak deve ser 5 (até ontem)
+      expect(habito.calcularStreak(), equals(5));
+
+      // Todos os dias da streak devem retornar true
+      expect(habito.estaNaStreakAtual(d.subtract(const Duration(days: 1))), isTrue);
+      expect(habito.estaNaStreakAtual(d.subtract(const Duration(days: 2))), isTrue);
+      expect(habito.estaNaStreakAtual(d.subtract(const Duration(days: 3))), isTrue);
+      expect(habito.estaNaStreakAtual(d.subtract(const Duration(days: 4))), isTrue);
+      expect(habito.estaNaStreakAtual(d.subtract(const Duration(days: 5))), isTrue);
+
+      // Dia anterior à streak deve retornar false
+      expect(habito.estaNaStreakAtual(d.subtract(const Duration(days: 6))), isFalse);
+      
+      // Hoje deve retornar false (não está na streak)
+      expect(habito.estaNaStreakAtual(d), isFalse);
     });
   });
 
