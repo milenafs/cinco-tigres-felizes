@@ -97,6 +97,33 @@ Abaixo estão definidos os Épicos e as Histórias de Usuário para o desenvolvi
 
 > **Nota sobre priorização:** O backlog está ordenado de forma decrescente por valor. O acesso à plataforma (Épico 1) é bloqueante, o rastreamento de hábitos (Épico 2) é o núcleo de valor e a gestão de vacinas (Épico 3) é o diferencial competitivo.
 
+## 🚀 Funcionalidades (Features)
+
+A plataforma **Cinco Tigres Felizes** oferece um conjunto de funcionalidades voltadas para o monitoramento da saúde e o incentivo a hábitos saudáveis.
+
+### 1. Gestão de Acesso (Login)
+Permite que os usuários criem contas e realizem login de forma segura. A integração com o **Firebase** garante que os dados dos usuários sejam mantidos sincronizados entre diferentes sessões e dispositivos.
+
+### 2. Gestão de Vacinação
+Exibe um catálogo completo de vacinas baseado nos dados oficiais do SUS, detalhando as doses recomendadas.
+*   **Filtros:** Busca facilitada por vacinas indicadas para cada faixa etária.
+*   **Progresso:** Permite marcar doses individuais como tomadas, definindo o status da vacina como "em progresso" ou "concluída", organizando o histórico de imunização do usuário.
+
+### 3. Rastreamento de Hábitos
+Ferramenta para a criação e acompanhamento de hábitos personalizados. O usuário pode definir hábitos com frequências diárias ou semanais, monitorando sua própria frequência e mantendo a motivação para a manutenção de um estilo de vida saudável.
+
+### 4. Controle de Hidratação
+Monitoramento da meta diária de ingestão de água, customizável de acordo com as necessidades individuais de cada usuário. O sistema permite o registro rápido de ingestão (250mL ou 500mL), fornecendo feedback visual do progresso em relação à meta estabelecida.
+
+### 5. Gamificação e Conquistas
+Sistema de recompensas baseado em selos. O usuário recebe reconhecimentos virtuais ao atingir marcos de manutenção de hábitos. Este mecanismo visa tornar a adesão a rotinas saudáveis um processo contínuo, lúdico e motivador.
+
+### 6. Streak de Hábitos
+Sistema de contagem de dias consecutivos (streaks) para cada hábito registrado:
+*   **Acompanhamento:** Exibe a sequência atual de dias consecutivos concluídos.
+*   **Gestão de Estado:** Atualização automática ao concluir o hábito; reinício da contagem em caso de interrupção.
+*   **Histórico:** Armazena a maior streak já alcançada pelo usuário e oferece destaque visual para sequências superiores a 7 dias.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
